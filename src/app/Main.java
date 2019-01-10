@@ -5,6 +5,7 @@ import controller.FormLoginController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -48,11 +49,13 @@ public class Main extends Application {
     }
 
     protected void initStage() {
+
         palco = new Stage();
         palco.setScene(cena);
         palco.centerOnScreen();
         palco.setResizable(false);
-        palco.initStyle(StageStyle.UTILITY);
+        Image icon = new Image("/img/logo_login.png");
+        palco.getIcons().add(icon);
         palco.setTitle("Sistema de Avaliação Física e Nutricional");
         palco.show();
     }
