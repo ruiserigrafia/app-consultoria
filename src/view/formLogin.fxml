@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="recipienteLogin" fx:id="anchorPane" stylesheets="@../app/application.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.FormLoginController">
+    <children>
+        <Pane id="painelTopoLogin" fx:id="paneCabecalho" prefHeight="54.0" prefWidth="394.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Text id="cabecalhoLogin" fx:id="textCabecalho" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="header" wrappingWidth="400.0" />
+            </children></Pane>
+        <Pane id="painelCentralLogin" fx:id="paneCentral" layoutY="54.0" prefHeight="209.0" prefWidth="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <ImageView id="logoLogin" fx:id="imageLogo" fitHeight="121.0" fitWidth="160.0" layoutX="14.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../img/logo_login.png" />
+                    </image></ImageView>
+                <TextField id="cxLogin" fx:id="fieldlogin" layoutX="209.0" layoutY="17.0" styleClass="promptText" />
+                <Text id="msgLogin" fx:id="textMsgLogin" layoutX="200.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textMsgLogin" text="menssagem para logn" wrappingWidth="179.0" />
+                <PasswordField id="cxSenha" fx:id="fieldSenha" layoutX="209.0" layoutY="86.0" styleClass="promptText" />
+                <Text id="msgSenha" fx:id="textMsgSenha" layoutX="200.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textMsgLogin" text="menssagem senha" wrappingWidth="178.99999618530273" />
+                <Button id="btnEntrar" fx:id="buttonEntrar" layoutX="173.0" layoutY="154.0" mnemonicParsing="false" text="button" />
+                <Button id="btnSair" fx:id="buttonSair" layoutX="286.0" layoutY="154.0" mnemonicParsing="false" text="button" />
+            </children></Pane>
+        <Pane id="painelRodapeLogin" fx:id="paneRodape" layoutX="-6.0" layoutY="86.0" prefHeight="38.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Text id="textoRodapeLogin" fx:id="textRodape" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="rodape" wrappingWidth="400.0" />
+            </children></Pane>
+    </children>
+</AnchorPane>
