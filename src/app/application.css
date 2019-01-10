@@ -1,0 +1,210 @@
+/* JavaFX CSS - Deixe este comentário até que você tenha pelo menos criar uma regra que usa -fx-Property */
+
+/************************** Elementos FXML ************************/
+
+.Layout {
+
+}
+
+.radio-button, .button, .date-Picker:editable, .toogle-button {
+    -fx-cursor: hand;
+}
+
+.menu-bar {
+    -fx-background-color: black;
+    -fx-pref-height: 30px;
+}
+
+.menu-bar .container {
+    -fx-background-color: linear-gradient( from 0.0% 0.0% to 100.0% 100.0%, rgb(0,0,0) 0.0, rgb(179,26,26) 100.0);
+}
+
+.menu-bar .menu, .menu-bar .menu-item {
+    -fx-pref-width: 100px;
+    -fx-pref-height: 30px;
+    -fx-background-color:black ;
+    -fx-text-fill: white;
+}
+
+.menu-bar .label {
+    -fx-font-weight: bolder;
+    -fx-alignment: center ;
+    -fx-text-fill: white;
+}
+
+.menu:openvertically .label:hover{
+    -fx-background-color:rgb(0,64,64);
+}
+
+.label {
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bolder;
+}
+
+.text-field, .radio-button, .date-picker, .combo-box, .toogle-button  {
+    -fx-pref-height: 30px;
+    -fx-font-size: 1.4em;
+}
+
+.radio-button {
+    -fx-font-size: 1.4em;
+}
+
+.promptText {
+    -fx-prompt-text-fill: red;
+}
+
+.promptText:hover, .promptText:focused {
+    -fx-prompt-text-fill: darkgrey;
+}
+
+/***********************************************************/
+/********************** Classes *********************/
+
+
+.paneHeader, .paneDiv {
+    -fx-effect: dropshadow(gaussian, black, 50, 0.0, 5, 5);
+}
+
+.paneHeader{
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+}
+
+.paneDiv {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+.labelHeader{
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-font-size: 4em;
+}
+
+.textMsgLogin {
+    -fx-fill: white ;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-font-size: 14px;
+}
+
+.textMsgStatus {
+    -fx-fill: white;
+    -fx-text-alignment: right;
+    -fx-alignment: right;
+    -fx-font-size: 14px;
+}
+
+.btnCadastrar {
+    -fx-pref-width: 120px;
+    -fx-pref-height: 50px;
+    -fx-text-fill: white;
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient( from 0.0% 0.0% to 100.0% 100.0%, rgb(0,255,255) 0.0, rgb(39,26,126) 100.0);
+}
+
+/***********************************************************/
+/********************** Tela Principal *********************/
+
+#recipientePrincipal {
+    -fx-pref-width: 1200px;
+    -fx-pref-height: 600px;
+}
+
+.nodeCenter {
+    -fx-pref-width: 1200px;
+    -fx-pref-height: 550px;
+    -fx-background-color: rgb(42,42,42);
+}
+
+/**********************************************************/
+
+/*********************** Tela Login ***********************/
+
+#recipienteLogin {
+    -fx-pref-width: 400px;
+    -fx-pref-height: 300px;
+}
+
+#painelTopoLogin, #painelRodapeLogin {
+    -fx-background-color: black;
+}
+
+#cabecalhoLogin, #textoRodapeLogin {
+    -fx-fill: white;
+    -fx-font-size: 20px;
+    -fx-text-alignment: center;
+    -fx-font-weight: bolder;
+}
+
+#painelCentralLogin {
+    -fx-background-color: linear-gradient(from 40% 40% to 100% 100%, black, orange);
+}
+
+#logoLogin{
+    -fx-padding: 2px;
+    -fx-opacity: 0.5;
+}
+
+#cxLogin, #cxSenha {
+    -fx-pref-width: 160px;
+    -fx-pref-height: 40px;
+    -fx-alignment: center;
+    -fx-font-size: 1.5em;
+    -fx-text-fill: rgb(102,26,51);
+    -fx-font-weight: bolder;
+}
+
+#cxLogin:focused, #cxSenha:focused {
+
+}
+
+#btnEntrar, #btnSair {
+    -fx-pref-width: 95px;
+    -fx-pref-height: 40px;
+    -fx-text-fill: black;
+}
+
+#btnEntrar {
+    -fx-background-color: limegreen;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15 15 15 15;
+}
+
+#btnSair {
+    -fx-background-color: orangered;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15 15 15 15;
+}
+
+#btnEntrar:hover, #btnEntrar:focused, #btnSair:hover, #btnSair:focused {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, black, 0.5, 0.5, 0.5, 0.5);
+}
+
+#btnEntrar:hover, #btnEntrar:focused {
+    -fx-background-color: darkgreen;
+}
+
+#btnSair:hover, #btnSair:focused {
+    -fx-background-color: darkred;
+}
+
+#painelRodapeLogin {
+
+}
+
+#textoRodapeLogin {
+    -fx-font-size: 15px;
+}
+
+
