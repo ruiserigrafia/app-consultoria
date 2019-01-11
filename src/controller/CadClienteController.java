@@ -148,6 +148,8 @@ public class CadClienteController implements Initializable {
     private Servidor servidor;
 
     private Service service;
+    private List<String> elementos;
+    private String selecionar;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -372,10 +374,12 @@ public class CadClienteController implements Initializable {
         comboPais.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
 
             if(observableValue.getValue()) {
+
                 comboEstado.getItems().clear();
                 comboEstado.setPromptText("Selecione um estado...");
                 comboCidade.setPromptText("Selecione uma cidade...");
                 comboCidade.getItems().clear();
+
                 if( comboPais.getItems().size() == 0 ) {
                     listarNomesPaises();
                 };
@@ -389,12 +393,15 @@ public class CadClienteController implements Initializable {
         comboEstado.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
 
             if(observableValue.getValue()) {
+
                 comboCidade.getItems().clear();
                 comboCidade.setPromptText("Selecione uma cidade...");
+
                 if(comboEstado.getItems().size()==0) {
                     listarNomesEstados();
                 }
-                } else {
+
+            } else {
                 comboEstado.setEditable(false);
             }
 
@@ -511,59 +518,12 @@ public class CadClienteController implements Initializable {
             servidor.setId(comboReligao.getSelectionModel().getSelectedIndex());
         });
 
-
     }
 
     private void listarNomesPaises() {
+
         try {
-
-            service = new Service() {
-                @Override
-                protected Task createTask() {
-                    return new Task() {
-                        @Override
-                        protected Object call() throws Exception {
-                            textStatus.setVisible(true);
-                            progressBar.setVisible(true);
-                            anchorPane.setDisable(true);
-                            updateMessage("Carregando lista de países...");
-
-                            ObservableList<String> lista = FXCollections.observableArrayList();
-                            lista.add(null);
-                            Thread.sleep(1000);
-                            for(int i = 0; i < pais.listaNomesPaises().size(); i++ ) {
-                                lista.add(pais.listaNomesPaises().get(i));
-                                updateProgress(i, pais.listaNomesPaises().size());
-                                updateMessage(" " + pais.listaNomesPaises().get(i));
-                                Thread.sleep(2);
-
-                            }
-                            comboPais.setItems(lista);
-                            return null;
-                        }
-                    };
-                }
-            };
-
-            progressBar.progressProperty().bind(service.progressProperty());
-            textStatus.textProperty().bind(service.messageProperty());
-
-            service.start();
-
-            service.stateProperty().addListener((observableValue1, o, t11) -> {
-                //service.cancel();
-                textStatus.setVisible(false);
-                progressBar.setVisible(false);
-                anchorPane.setDisable(false);
-                comboPais.requestFocus();
-                comboPais.getItems().sort((o1, o2) -> {
-                    if(o2.contains("Brasil")) {
-                        comboPais.getSelectionModel().select(o2);
-                    }
-                    return 0;
-                });
-            });
-
+            popularComboBox(pais.listaNomesPaises(), "Brasil", comboPais);
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de nomes de países");
         }
@@ -574,58 +534,8 @@ public class CadClienteController implements Initializable {
         try {
 
             if( pais.getId() > 0) {
-
                 estado.setPais(pais);
-
-                service = new Service() {
-                    @Override
-                    protected Task createTask() {
-                        return new Task() {
-                            @Override
-                            protected Object call() throws Exception {
-                                textStatus.setVisible(true);
-                                progressBar.setVisible(true);
-                                anchorPane.setDisable(true);
-                                updateMessage("Carregando lista de estados...");
-
-                                ObservableList<String> lista = FXCollections.observableArrayList();
-                                lista.add(null);
-                                Thread.sleep(1000);
-                                for(int i = 0; i < estado.listaNomeEstadoPorPais().size(); i++ ) {
-                                    lista.add(estado.listaNomeEstadoPorPais().get(i));
-                                    updateProgress(i, estado.listaNomeEstadoPorPais().size());
-                                    updateMessage(" " + estado.listaNomeEstadoPorPais().get(i));
-                                    Thread.sleep(2);
-
-                                }
-                                comboEstado.setItems(lista);
-                                return null;
-                            }
-                        };
-                    }
-                };
-
-                progressBar.progressProperty().bind(service.progressProperty());
-                textStatus.textProperty().bind(service.messageProperty());
-
-                service.start();
-
-                service.stateProperty().addListener((observableValue1, o, t11) -> {
-                    //service.cancel();
-                    textStatus.setVisible(false);
-                    progressBar.setVisible(false);
-                    anchorPane.setDisable(false);
-                    comboEstado.requestFocus();
-                    comboEstado.getItems().sort((o1, o2) -> {
-                        if (o2.contains("Pará")) {
-                            comboEstado.getSelectionModel().select(o2);
-                        } else {
-                            comboEstado.setPromptText("Selecione uma cidade");
-                        }
-                        return 0;
-                    });
-                });
-
+                popularComboBox(estado.listaNomeEstadoPorPais(),"Pará", comboEstado);
             }
 
         } catch (Exception ex) {
@@ -640,56 +550,7 @@ public class CadClienteController implements Initializable {
 
             if (estado.getId() > 0) {
                 cidade.setEstado(estado);
-
-                service = new Service() {
-                    @Override
-                    protected Task createTask() {
-                        return new Task() {
-                            @Override
-                            protected Object call() throws Exception {
-                                textStatus.setVisible(true);
-                                progressBar.setVisible(true);
-                                anchorPane.setDisable(true);
-                                updateMessage("Carregando lista de cidades...");
-
-                                ObservableList<String> lista = FXCollections.observableArrayList();
-                                lista.add(null);
-                                Thread.sleep(1000);
-                                for(int i = 0; i < cidade.listaPorEstado().size(); i++ ) {
-                                    lista.add(cidade.listaPorEstado().get(i));
-                                    updateProgress(i, cidade.listaPorEstado().size());
-                                    updateMessage(" " + cidade.listaPorEstado().get(i));
-                                    Thread.sleep(2);
-
-                                }
-                                comboCidade.setItems(lista);
-                                return null;
-                            }
-                        };
-                    }
-                };
-
-                progressBar.progressProperty().bind(service.progressProperty());
-                textStatus.textProperty().bind(service.messageProperty());
-
-                service.start();
-
-                service.stateProperty().addListener((observableValue1, o, t11) -> {
-                    //service.cancel();
-                    textStatus.setVisible(false);
-                    progressBar.setVisible(false);
-                    anchorPane.setDisable(false);
-                    comboCidade.requestFocus();
-                    comboCidade.getItems().sort((o1, o2) -> {
-                        if (o2.contains("Belém")) {
-                            comboCidade.getSelectionModel().select(o2);
-                        } else {
-                            comboCidade.setPromptText("Selecione uma cidade");
-                        }
-                        return 0;
-                    });
-                });
-
+                popularComboBox(cidade.listaPorEstado(), "Belém", comboCidade);
             }
 
         } catch (Exception ex) {
@@ -702,54 +563,7 @@ public class CadClienteController implements Initializable {
 
         try {
 
-            service = new Service() {
-                @Override
-                protected Task createTask() {
-                    return new Task() {
-                        @Override
-                        protected Object call() throws Exception {
-                            textStatus.setVisible(true);
-                            progressBar.setVisible(true);
-                            anchorPane.setDisable(true);
-                            updateMessage("Carregando lista de nacionalidades...");
-
-                            ObservableList<String> lista = FXCollections.observableArrayList();
-                            lista.add(null);
-                            Thread.sleep(1000);
-                            for(int i = 0; i < pais.listaNacionalidades().size(); i++ ) {
-                                lista.add(pais.listaNacionalidades().get(i));
-                                updateProgress(i, pais.listaNacionalidades().size());
-                                updateMessage(" " + pais.listaNacionalidades().get(i));
-                                Thread.sleep(2);
-
-                            }
-                            comboNacionalidade.setItems(lista);
-                            return null;
-                        }
-                    };
-                }
-            };
-
-            progressBar.progressProperty().bind(service.progressProperty());
-            textStatus.textProperty().bind(service.messageProperty());
-
-            service.start();
-
-            service.stateProperty().addListener((observableValue1, o, t11) -> {
-                //service.cancel();
-                textStatus.setVisible(false);
-                progressBar.setVisible(false);
-                anchorPane.setDisable(false);
-                comboNacionalidade.requestFocus();
-                comboNacionalidade.getItems().sort((o1, o2) -> {
-                    if (o2.contains("Brasileira")) {
-                        comboNacionalidade.getSelectionModel().select(o2);
-                    } else {
-                        comboCidade.setPromptText("Selecione uma nacionalidade");
-                    }
-                    return 0;
-                });
-            });
+            popularComboBox(pais.listaNacionalidades(), "Brasileira", comboNacionalidade);
 
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de nacionalidades");
@@ -761,56 +575,7 @@ public class CadClienteController implements Initializable {
         try {
 
             estado.setPais(pais);
-
-            service = new Service() {
-                @Override
-                protected Task createTask() {
-                    return new Task() {
-                        @Override
-                        protected Object call() throws Exception {
-                            textStatus.setVisible(true);
-                            progressBar.setVisible(true);
-                            anchorPane.setDisable(true);
-                            updateMessage("Carregando lista de nacionalidades...");
-
-                            ObservableList<String> lista = FXCollections.observableArrayList();
-                            lista.add(null);
-                            Thread.sleep(1000);
-                            for(int i = 0; i < estado.listaNaturalidade().size(); i++ ) {
-                                lista.add(estado.listaNaturalidade().get(i));
-                                updateProgress(i, estado.listaNaturalidade().size());
-                                updateMessage(" " + estado.listaNaturalidade().get(i));
-                                Thread.sleep(2);
-                            }
-                            comboNaturalidade.setItems(lista);
-                            return null;
-                        }
-                    };
-                }
-            };
-
-            progressBar.progressProperty().bind(service.progressProperty());
-            textStatus.textProperty().bind(service.messageProperty());
-
-            service.start();
-
-            service.stateProperty().addListener((observableValue1, o, t11) -> {
-                //service.cancel();
-                textStatus.setVisible(false);
-                progressBar.setVisible(false);
-                anchorPane.setDisable(false);
-                comboNaturalidade.requestFocus();
-                comboNaturalidade.getItems().sort((o1, o2) -> {
-                    if(o2.contains("Paraense")) {
-                        comboNaturalidade.getSelectionModel().select(o2);
-                    } else {
-                        comboNaturalidade.setPromptText("Selecione uma naturalidade");
-                    }
-
-                    return 0;
-                });
-
-            });
+            popularComboBox(estado.listaNaturalidade(), "Paraense", comboNaturalidade);
 
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de naturalidades");
@@ -819,150 +584,110 @@ public class CadClienteController implements Initializable {
     }
 
     private void listarEtnias() {
+
         try {
-
-            service = new Service() {
-                @Override
-                protected Task createTask() {
-                    return new Task() {
-                        @Override
-                        protected Object call() throws Exception {
-                            textStatus.setVisible(true);
-                            progressBar.setVisible(true);
-                            anchorPane.setDisable(true);
-                            updateMessage("Carregando lista de nacionalidades...");
-
-                            ObservableList<String> lista = FXCollections.observableArrayList();
-                            lista.add(null);
-                            Thread.sleep(1000);
-                            for(int i = 0; i < etnia.listaEtnias().size(); i++ ) {
-                                lista.add(etnia.listaEtnias().get(i));
-                                updateProgress(i, etnia.listaEtnias().size());
-                                updateMessage(" " + etnia.listaEtnias().get(i));
-                                Thread.sleep(2);
-
-                            }
-                            comboEtnia.setItems(lista);
-                            return null;
-                        }
-                    };
-                }
-            };
-
-            progressBar.progressProperty().bind(service.progressProperty());
-            textStatus.textProperty().bind(service.messageProperty());
-
-            service.start();
-
-            service.stateProperty().addListener((observableValue1, o, t11) -> {
-                //service.cancel();
-                textStatus.setVisible(false);
-                progressBar.setVisible(false);
-                anchorPane.setDisable(false);
-                comboEtnia.requestFocus();
-            });
-
+            popularComboBox(etnia.listaEtnias(), comboEtnia);
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de etnias");
         }
+
     }
 
     private void listarReligioes() {
+
         try {
-
-            service = new Service() {
-                @Override
-                protected Task createTask() {
-                    return new Task() {
-                        @Override
-                        protected Object call() throws Exception {
-                            textStatus.setVisible(true);
-                            progressBar.setVisible(true);
-                            anchorPane.setDisable(true);
-                            updateMessage("Carregando lista de nacionalidades...");
-
-                            ObservableList<String> lista = FXCollections.observableArrayList();
-                            lista.add(null);
-                            Thread.sleep(1000);
-                            for(int i = 0; i < religiao.listaReligioes().size(); i++ ) {
-                                lista.add(religiao.listaReligioes().get(i));
-                                updateProgress(i, religiao.listaReligioes().size());
-                                updateMessage(" " + religiao.listaReligioes().get(i));
-                                Thread.sleep(2);
-
-                            }
-                            comboReligao.setItems(lista);
-                            return null;
-                        }
-                    };
-                }
-            };
-
-            progressBar.progressProperty().bind(service.progressProperty());
-            textStatus.textProperty().bind(service.messageProperty());
-
-            service.start();
-
-            service.stateProperty().addListener((observableValue1, o, t11) -> {
-                //service.cancel();
-                textStatus.setVisible(false);
-                progressBar.setVisible(false);
-                anchorPane.setDisable(false);
-                comboReligao.requestFocus();
-            });
-
+            popularComboBox(religiao.listaReligioes(), comboReligao);
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de religiões");
         }
     }
 
-
     private void listarServidoresEmail() {
+
         try {
-            service = new Service() {
-                @Override
-                protected Task createTask() {
-                    return new Task() {
-                        @Override
-                        protected Object call() throws Exception {
-                            textStatus.setVisible(true);
-                            progressBar.setVisible(true);
-                            anchorPane.setDisable(true);
-                            updateMessage("Carregando lista de nacionalidades...");
-
-                            ObservableList<String> lista = FXCollections.observableArrayList();
-                            lista.add(null);
-                            Thread.sleep(1000);
-                            for(int i = 0; i < servidor.listaNomeServidor().size(); i++ ) {
-                                lista.add(servidor.listaNomeServidor().get(i));
-                                updateProgress(i, servidor.listaNomeServidor().size());
-                                updateMessage(" " + servidor.listaNomeServidor().get(i));
-                                Thread.sleep(2);
-
-                            }
-                            comboServidor.setItems(lista);
-                            return null;
-                        }
-                    };
-                }
-            };
-
-            progressBar.progressProperty().bind(service.progressProperty());
-            textStatus.textProperty().bind(service.messageProperty());
-
-            service.start();
-
-            service.stateProperty().addListener((observableValue1, o, t11) -> {
-                //service.cancel();
-                textStatus.setVisible(false);
-                progressBar.setVisible(false);
-                anchorPane.setDisable(false);
-                comboServidor.requestFocus();
-            });
-
+            popularComboBox(servidor.listaNomeServidor(), comboServidor);
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de servidor de email");
         }
+    }
+
+    private void popularComboBox(List<String> elementos, String selecionar, ComboBox<String> comboBox) {
+
+        executarPopularComboBox(elementos, comboBox);
+
+        service.stateProperty().addListener((observableValue1, o, t11) -> {
+            //service.cancel();
+            textStatus.setVisible(false);
+            progressBar.setVisible(false);
+            anchorPane.setDisable(false);
+
+            comboBox.requestFocus();
+
+            comboBox.getItems().sorted((o1, o2) -> {
+
+                if(o2.contains(selecionar)) {
+                    comboBox.getSelectionModel().select(o2);
+                } else {
+                    comboBox.setPromptText("Selecione...");
+                }
+
+                return 0;
+            });
+
+        });
+
+    }
+
+    private void popularComboBox(List<String> elementos, ComboBox<String> comboBox) {
+
+        executarPopularComboBox(elementos, comboBox);
+
+        service.stateProperty().addListener((observableValue1, o, t11) -> {
+            //service.cancel();
+            textStatus.setVisible(false);
+            progressBar.setVisible(false);
+            anchorPane.setDisable(false);
+            comboBox.requestFocus();
+
+        });
+
+    }
+
+    private void executarPopularComboBox(List<String> elementos, ComboBox<String> comboBox) {
+
+        service = new Service() {
+            @Override
+            protected Task createTask() {
+                return new Task() {
+                    @Override
+                    protected Object call() throws Exception {
+                        textStatus.setVisible(true);
+                        progressBar.setVisible(true);
+                        anchorPane.setDisable(true);
+                        updateMessage("Carregando lista...");
+
+                        ObservableList<String> lista = FXCollections.observableArrayList();
+                        lista.add(null);
+                        Thread.sleep(1000);
+                        for(int i = 0; i < elementos.size(); i++ ) {
+                            lista.add(elementos.get(i));
+                            updateProgress(i, elementos.size());
+                            updateMessage(elementos.get(i));
+                            Thread.sleep(2);
+
+                        }
+                        comboBox.setItems(lista);
+                        return null;
+                    }
+                };
+            }
+        };
+
+        progressBar.progressProperty().bind(service.progressProperty());
+        textStatus.textProperty().bind(service.messageProperty());
+
+        service.start();
+
     }
 
     private void mascarearCampos() {
