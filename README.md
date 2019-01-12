@@ -1,10 +1,6 @@
 
 # App Consultoria
-<<<<<<< HEAD
-![Atualização](https://img.shields.io/github/issues/detail/last-update/badges/shields/979.svg?style=plastic)
 
-=======
->>>>>>> editando README
 ## Sobre o proejto
 Projeto de desenvolvimento de uma aplicação, voltada para o gerenciamento de uma consultoria de avaliação física e nutricional.
 ## Ambiente para desenvolvimento
@@ -13,15 +9,9 @@ Projeto de desenvolvimento de uma aplicação, voltada para o gerenciamento de u
 ![FXML](https://img.shields.io/badge/FXML-Marcação-blue.svg)
 ![SceneBuilder](https://img.shields.io/badge/Gluon-Construtor-blue.svg)
 ![MySQL](https://img.shields.io/badge/MySQL-SGDB-blue.svg)
-
-<<<<<<< HEAD
 - [Java](https://www.java.com/pt_BR/) é uma liguagem de programa orientada a objeto.
 - [JavaFX](https://openjfx.io/) é uma biblioteca gráfica da plataforma Java.
-=======
-- [Java](https://www.java.com/pt_BR/) é uma linguagem de programa orientada a objeto.
-- [JavaFX](https://openjfx.io/) é uma biblioteca gráfica da plataforma Java.
 - [FXML](https://openjfx.io/javadoc/11/javafx.fxml/javafx/fxml/doc-files/introduction_to_fxml.html) é uma linguagem de marcação baseado e XML.
->>>>>>> editando README
 - [SeneBuilder Gluon](https://gluonhq.com/) é um construtor de grafos FXML.
 - [MySQL](https://www.mysql.com/) é um SGDB com versão livre e comercial.
 
@@ -311,10 +301,13 @@ Para criar uma imagem de tempo de execução, execute os seguintes comandos:
 |set PATH_TO_FX_MODS="path\to\javafx-jmods-11"|export PATH_TO_FX_MODS=path/to/javafx-jmods-11
 |jlink --module-path "%PATH_TO_FX_MODS%;bin\hellofx" --add-modules=hellofx --output jre|$JAVA_HOME/bin/jlink --module-path $PATH_TO_FX_MODS:bin/hellofx --add-modules=hellofx --output jre
 |jre\bin\java -m hellofx/org.openjfx.MainApp|jre/bin/java -m hellofx/org.openjfx.MainApp
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 ### MySQL
 =======
+=======
+>>>>>>> 	modified:   README.md
 ### SceneBuilder Gluon
 SceneBuider Gluon versão 11 utlizada esta disponível em [Gluon](https://gluonhq.com/products/scene-builder/thanks/?dl=/download/scene-builder-9-windows-x64/).
 
@@ -335,4 +328,3 @@ Principais mudanças:
                         "usuario",
                         "senha"
                     );
->>>>>>> editando README
