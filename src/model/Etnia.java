@@ -1,13 +1,10 @@
 package model;
 
-
 import dao.EtniaDao;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +66,27 @@ public class Etnia {
         this.etnias = etnias;
     }
 
-    public List<Etnia> carregarEtnias() throws Exception {
+    public void cadasttrarEtnia() throws Exception {
+        etniaDao.inserirEtnia(this);
+    }
+
+    public void atulizarEnia() throws Exception {
+        etniaDao.alterarEtnia(this);
+    }
+
+    public void excluirEtnia() throws Exception {
+        etniaDao.deletarEtnia(this.getId());
+    }
+
+    public Object pesquisarPorID() throws Exception {
+        return etniaDao.pesquisaPorId(this.getId());
+    }
+
+    public Object pesquisarPorDefinicao() throws Exception {
+        return etniaDao.pesquisarPorDefinicao(this.getDefinicao());
+    }
+
+    public List<Etnia> pesquisarEtnias() throws Exception {
         return etniaDao.pesquisarTodos();
     }
 

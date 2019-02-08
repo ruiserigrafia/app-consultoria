@@ -5,8 +5,6 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,10 +65,29 @@ public class Religiao {
         this.religioes = religioes;
     }
 
-    public List<Religiao> carregarReligioes() throws Exception {
-        return religiaoDao.pesquisarTodos();
+    public void cadastrarReligiao() throws Exception {
+        religiaoDao.inserirReligiao(this);
     }
 
+    public void atualizarReligiao() throws Exception {
+        religiaoDao.alterarReligao(this);
+    }
+
+    public void apagarReligiao() throws Exception {
+        religiaoDao.deletarReligiao(this.getId());
+    }
+
+    public Object pesquisarPorId() throws Exception {
+        return religiaoDao.pesquisarId(this.getId());
+    }
+
+    public Object pesquisarPorDefinicao() throws Exception {
+        return religiaoDao.pesquisarDefinicao(this.getDefinicao());
+    }
+
+    public List<Religiao> pesquisarPorReligioes() throws Exception {
+        return religiaoDao.pesquisarTodos();
+    }
 
     public int mostrarTotal() throws Exception {
         return religiaoDao.contarQuantidadeReligioes();

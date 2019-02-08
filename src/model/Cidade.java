@@ -5,8 +5,6 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,31 +75,39 @@ public class Cidade {
         this.cidades = cidades;
     }
 
-    public void salvarCidade() throws Exception {
-        cidadeDao.inserirCidade(new Cidade(getId(), getNome(), getEstado()));
+    public void cadastrarCidade() throws Exception {
+        this.setId(cidadeDao.inserirCidade(this));
     }
 
     public void atualizarCidade() throws Exception {
-        cidadeDao.alterarCidade(new Cidade(getId(), getNome(), getEstado()));
+        cidadeDao.alterarCidade(this);
     }
 
     public void excluirCidade() throws Exception{
-        cidadeDao.deletarCidade(getId());
+        cidadeDao.deletarCidade(this.getId());
     }
 
-    public List<Cidade> carregarCidades() throws Exception {
+    public Object pesquisarIdCidade() throws Exception {
+        return cidadeDao.pesquisarPorId(this.getId());
+    }
+
+    public Object pesquisarNomeCidade() throws Exception {
+        return cidadeDao.pesquisarPorNome(this.getNome());
+    }
+
+    public List<Cidade> pesquisarCidades() throws Exception {
         return cidadeDao.pesquisarTodos();
     }
 
-    public int mostrarTotal() throws Exception {
+    public int obterTotalCidades() throws Exception {
         return cidadeDao.contarQuantidadeCidade();
     }
 
     public List<String> listaPorEstado() {
         List<String> listaCidades = new ArrayList<>();
-        for (Cidade cidade : cidades) {
-            if(cidade.getEstado().getId() == this.estado.getId()) {
-                listaCidades.add(cidade.getNome());
+        for (Cidade c :  cidades) {
+            if(c.getEstado().getId() == this.estado.getId()) {
+                listaCidades.add(c.getNome());
             }
         }
         return listaCidades;

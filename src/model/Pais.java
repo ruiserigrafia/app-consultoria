@@ -5,15 +5,9 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.scene.control.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class Pais {
 
@@ -21,7 +15,6 @@ public class Pais {
     private StringProperty nome = new SimpleStringProperty();
     private StringProperty isp = new SimpleStringProperty();
     private IntegerProperty ddi = new SimpleIntegerProperty();
-    private StringProperty nacionalidade = new SimpleStringProperty();
     private List<Pais> paises = new ArrayList<>();
     private PaisDao paisDao;
 
@@ -29,16 +22,11 @@ public class Pais {
         paisDao = new PaisDao();
     }
 
-    public Pais(int id) {
-        this.setId(id);
-    }
-
-    public Pais(int id, String nome, String isp, int ddi, String nacionalidade) {
+    public Pais(int id, String nome, String isp, int ddi) {
         setId(id);
         setNome(nome);
         setISP(isp);
         setDDI(ddi);
-        setNacionalidade(nacionalidade);
     }
 
     public int getId() {
@@ -104,22 +92,6 @@ public class Pais {
         this.ddi = ddi;
     }
 
-    public String getNacionalidade() {
-        return nacionalidade.get();
-    }
-
-    public void setNacionalidade(String nacionalidade) {
-        this.nacionalidade.set(nacionalidade);
-    }
-
-    public StringProperty getPropriedadeNacionalidade() {
-        return nacionalidade;
-    }
-
-    public void setPropriedadeNacionalidade(StringProperty nacionalidade) {
-        this.nacionalidade = nacionalidade;
-    }
-
     public List<Pais> getPaises() {
         return paises;
     }
@@ -128,33 +100,40 @@ public class Pais {
         this.paises = paises;
     }
 
-    public List<Pais> carregarPaises() throws Exception{
+    public List<Pais> pesquisarPaises() throws Exception{
         return paisDao.pesquisarTodos();
     }
 
     public void adicionarPais() throws Exception {
-        paisDao.inserirPais(new Pais(getId(), getNome(), getISP(), getDDI(), getNacionalidade()));
+        paisDao.inserirPais(this);
     }
 
     public void atualizarPais() throws Exception {
-        paisDao.alterarPais(new Pais(getId(), getNome(), getISP(), getDDI(), getNacionalidade()));
+        paisDao.alterarPais(this);
     }
 
     public void excluirPais() throws Exception {
-        paisDao.deletarDados(getId());
+        paisDao.deletarDados(this.id.get());
     }
 
-    public void addPaises() throws Exception {
-
+    public Object pesquisarPorIdPais() throws Exception {
+        return paisDao.pesquisarPorid(this.getId());
     }
 
-    public void idPorNaconalidade(String nacionalidade) {
-        this.setNacionalidade(nacionalidade);
-        for(Pais p : paises) {
-            if(p.getNacionalidade() == getNacionalidade()) {
-                setId(p.getId());
-            }
-        }
+    public Object pesquisarPorNomePais() throws Exception {
+        return paisDao.pesquisarPorNome(this.getNome());
+    }
+
+    public Object pesquisarPorISP() throws Exception {
+        return  paisDao.pesquisarPorISP(this.getISP());
+    }
+
+    public Object pesquisarPorDDI() throws Exception {
+        return paisDao.pesquisarPorDDI(this.getDDI());
+    }
+
+    public String pesquisarNomePorPalavra(String texto) throws Exception {
+        return paisDao.procurarPorIniciais(texto);
     }
 
     public List<String> listaNomesPaises() {
@@ -166,21 +145,8 @@ public class Pais {
         return nomesPaises;
     }
 
-    public List<String> listaNacionalidades() {
-        List<String> listaNacionalidades = new ArrayList<>();
-        for(Pais pais : paises ) {
-            if(pais.getNacionalidade() != null) {
-                listaNacionalidades.add(pais.getNacionalidade());
-            }
-        }
-        return listaNacionalidades;
-    }
-
-    public int mostrarTotal() throws Exception {
+    public int obterTotalPaises() throws Exception {
         return paisDao.contarPaises();
     }
-
-
-
 
 }

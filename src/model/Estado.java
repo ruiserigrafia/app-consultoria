@@ -1,13 +1,10 @@
 package model;
 
-import com.oracle.javafx.scenebuilder.kit.editor.panel.inspector.editors.FxIdEditor;
 import dao.EstadoDao;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +14,6 @@ public class Estado {
     private IntegerProperty id = new SimpleIntegerProperty();
     private StringProperty nome =new SimpleStringProperty();
     private StringProperty uf = new SimpleStringProperty();
-    private StringProperty naturalidade = new SimpleStringProperty();
     private Pais pais;
     private List<Estado> estados = new ArrayList<>();
     private EstadoDao estadoDao;
@@ -27,15 +23,10 @@ public class Estado {
         estadoDao = new EstadoDao();
     }
 
-    public Estado(int id) {
-        setId(id);
-    }
-
-    public Estado(int id, String nome, String uf, String naturalidade, Pais pais) {
+    public Estado(int id, String nome, String uf, Pais pais) {
         setId(id);
         setNome(nome);
         setUf(uf);
-        setNaturalidade(naturalidade);
         setPais(pais);
     }
 
@@ -87,22 +78,6 @@ public class Estado {
         this.uf = uf;
     }
 
-    public String getNaturalidade() {
-        return naturalidade.get();
-    }
-
-    public void setNaturalidade(String naturalidade) {
-        this.naturalidade.set(naturalidade);
-    }
-
-    public StringProperty getPropriedadeNaturalidade() {
-        return naturalidade;
-    }
-
-    public void setPropriedadeNaturalidade(StringProperty naturalidade) {
-        this.naturalidade = naturalidade;
-    }
-
     public Pais getPais() {
         return pais;
     }
@@ -110,10 +85,6 @@ public class Estado {
     public void setPais (Pais pais)
     {
         this.pais = pais;
-    }
-
-    public void salvarEstado() throws Exception {
-        estadoDao.inserirEstado(new Estado(getId(), getNome(), getUf(), getNaturalidade(), getPais()));
     }
 
     public List<Estado> getEstados() {
@@ -124,20 +95,32 @@ public class Estado {
         this.estados = estados;
     }
 
-    public void atualizarEstado() throws Exception {
-        estadoDao.alterarEstado(new Estado(getId(), getNome(), getUf(), getNaturalidade(), getPais()));
 
+    public void cadastrarEstado() throws Exception {
+       this.setId(estadoDao.inserirEstado(this));
+    }
+
+    public void atualizarEstado() throws Exception {
+        estadoDao.alterarEstado(this);
     }
 
     public void excluirEstado() throws Exception {
-        estadoDao.deletarEstado(getId());
+        estadoDao.deletarEstado(this.getId());
     }
 
-    public List<Estado> carregarEstados() throws Exception {
+    public Object pesquisarPorNomeEstado() throws Exception {
+        return estadoDao.pesquisarPorNome(this.getNome());
+    }
+
+    public Object pesquisarPorUF() throws Exception {
+        return estadoDao.pesquisarPorUF(this.getUf());
+    }
+
+    public List<Estado> pesquisarEstados() throws Exception {
         return estadoDao.pesquisarTodos();
     }
 
-    public int mostrarTotal() throws Exception {
+    public int obterTotalEstados() throws Exception {
         return estadoDao.contarQuantidadeEstado();
     }
 
@@ -149,16 +132,6 @@ public class Estado {
             }
         }
         return nomesEstados;
-    }
-
-    public List<String> listaNaturalidade() {
-        List<String> naturalidades = new ArrayList<>();
-        for(Estado itemEstado : estados ) {
-            if(itemEstado.getPais().getId() == this.pais.getId()) {
-                naturalidades.add(itemEstado.getNaturalidade());
-            }
-        }
-        return naturalidades;
     }
 
 }
