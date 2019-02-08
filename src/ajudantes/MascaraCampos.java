@@ -12,7 +12,6 @@ import java.util.List;
 
 public abstract class MascaraCampos {
     private static List<KeyCode> ignoreKey;
-    private Alert alert;
 
     public static void maxField(final TextField textField, final Integer length) {
         textField.textProperty().addListener(new ChangeListener<String>() {
@@ -66,7 +65,7 @@ public abstract class MascaraCampos {
             public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
                 if (newValue.intValue() < 11) {
                     String value = textField.getText();
-                    value = value.replaceAll("[A-Z]","");
+                    value = value.toLowerCase();
                     value = value.replaceAll("[0-9]","");
                     value = value.replaceFirst("(\\d)","$1");
                     textField.setText(value);
@@ -76,7 +75,7 @@ public abstract class MascaraCampos {
         });
     }
 
-    public  static  void palavraField(final TextField textField) {
+    public static void palavraField(final TextField textField) {
 
         maxField(textField, 40);
 
@@ -93,6 +92,27 @@ public abstract class MascaraCampos {
                 }
             }
         });
+    }
+
+    public static void nomeField(final TextField textField) {
+
+        maxField(textField, 250);
+
+        textField.lengthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                if (newValue.intValue()<251) {
+                    String value = textField.getText().toLowerCase();
+
+                    value = value.replaceAll("\\S", "");
+                    //value = value.replaceFirst("(\\d)","$1");
+                    textField.setText(value);
+                    positionCaret(textField);
+
+                }
+            }
+        });
+
     }
 
     public static void textoField(final TextField textField) {
@@ -162,6 +182,26 @@ public abstract class MascaraCampos {
                     value = value.replaceAll("[^0-9]","");
                     value = value.replaceFirst("(\\d{2})(\\d{1})(\\d{4})(\\d)","($1) $2 $3-$4");
                     textField.setText(value);
+                }
+            }
+        });
+    }
+
+    public  static  void emailField(final TextField textField) {
+
+        maxField(textField, 50);
+
+        textField.lengthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                if(newValue.intValue()<51) {
+                    String value = textField.getText();
+                    value = value.replaceAll("\\s","");
+                    value = value.replaceAll("@","");
+                    value = value.replaceAll(",","");
+                    value = value.replaceFirst("(\\d)", "$1");
+                    textField.setText(value);
+                    positionCaret(textField);
                 }
             }
         });

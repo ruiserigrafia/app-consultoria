@@ -26,46 +26,46 @@
               <Label fx:id="labelNascimento" layoutX="22.0" layoutY="58.0" text="Nascimento" />
               <DatePicker fx:id="pickerNascimento" layoutX="139.0" layoutY="58.0" prefHeight="32.0" prefWidth="146.0" styleClass="promptText" />
               <Label fx:id="labelEstadoCivil" layoutX="328.0" layoutY="60.0" text="Estado Civil" />
-              <ComboBox fx:id="comboEstadoCivil" layoutX="440.0" layoutY="55.0" prefHeight="32.0" prefWidth="146.0" />
+              <ComboBox fx:id="comboEstadoCivil" layoutX="440.0" layoutY="55.0" prefHeight="32.0" prefWidth="146.0" styleClass="promptText" />
               <RadioButton fx:id="radioMasculno" layoutX="669.0" layoutY="11.0" mnemonicParsing="false" prefWidth="101.0" text="Masculino" />
               <RadioButton fx:id="radioFeminino" layoutX="669.0" layoutY="59.0" mnemonicParsing="false" prefWidth="101.0" text="Feminino" />
               <Label fx:id="labelFixo" layoutX="886.0" layoutY="15.0" text="Fixo" />
-              <TextField fx:id="textFieldFixo" layoutX="932.0" layoutY="10.0" prefHeight="32.0" prefWidth="141.0" />
+              <TextField fx:id="textFieldFixo" layoutX="932.0" layoutY="10.0" prefHeight="32.0" prefWidth="141.0" styleClass="promptText" />
             <Label fx:id="labelCelular" layoutX="861.0" layoutY="61.0" text="Celular" />
-              <TextField fx:id="textFieldCelular" layoutX="932.0" layoutY="56.0" prefHeight="32.0" prefWidth="141.0" />
+              <TextField fx:id="textFieldCelular" layoutX="932.0" layoutY="56.0" prefHeight="32.0" prefWidth="141.0" styleClass="promptText" />
               <RadioButton fx:id="radioZap" layoutX="1083.0" layoutY="59.0" mnemonicParsing="false" text="ZAP" />
          </children>
       </Pane>
       <Pane fx:id="paneDivDois" layoutX="15.0" layoutY="211.0" prefHeight="105.0" prefWidth="1170.0" styleClass="paneDiv">
          <children>
               <Label fx:id="labelEndereco" layoutX="20.0" layoutY="13.0" text="Endereço" />
-              <TextField fx:id="textFieldEndereco" layoutX="116.0" layoutY="10.0" prefHeight="32.0" prefWidth="1021.0" />
+              <TextField fx:id="textFieldEndereco" layoutX="116.0" layoutY="10.0" prefHeight="32.0" prefWidth="1021.0" styleClass="promptText" />
               <Label fx:id="labelPais" layoutX="20.0" layoutY="59.0" text="País" />
-              <ComboBox fx:id="comboPais" layoutX="65.0" layoutY="56.0" prefHeight="32.0" prefWidth="276.0" />
+              <ComboBox fx:id="comboPais" layoutX="65.0" layoutY="56.0" prefHeight="32.0" prefWidth="276.0" styleClass="promptText" />
               <Label fx:id="labelEstado" layoutX="380.0" layoutY="60.0" text="Estado" />
-              <ComboBox fx:id="comboEstado" layoutX="442.0" layoutY="58.0" prefHeight="32.0" prefWidth="286.0" />
+              <ComboBox fx:id="comboEstado" layoutX="442.0" layoutY="58.0" prefHeight="32.0" prefWidth="286.0" styleClass="promptText" />
               <Label fx:id="labelCidade" layoutX="791.0" layoutY="59.0" text="Cidade" />
-              <ComboBox fx:id="comboCidade" layoutX="861.0" layoutY="56.0" prefHeight="32.0" prefWidth="276.0" />
+              <ComboBox fx:id="comboCidade" layoutX="861.0" layoutY="56.0" prefHeight="32.0" prefWidth="276.0" styleClass="promptText" />
          </children>
       </Pane>
       <Pane fx:id="paneDivTres" layoutX="15.0" layoutY="329.0" prefHeight="115.0" prefWidth="1170.0" styleClass="paneDiv">
          <children>
               <Label fx:id="labelNaconalidade" layoutX="14.0" layoutY="15.0" text="Nacionalidade" />
-              <ComboBox fx:id="comboNacionalidade" layoutX="144.0" layoutY="13.0" prefHeight="32.0" prefWidth="194.0" />
+              <ComboBox fx:id="comboNacionalidade" layoutX="144.0" layoutY="13.0" prefHeight="32.0" prefWidth="194.0" styleClass="promptText" />
               <Label fx:id="labelNaturakidade" layoutX="433.0" layoutY="16.0" text="Naturalidade" />
-              <ComboBox fx:id="comboNaturalidade" layoutX="553.0" layoutY="14.0" prefHeight="32.0" prefWidth="207.0" />
+              <ComboBox fx:id="comboNaturalidade" layoutX="553.0" layoutY="14.0" prefHeight="32.0" prefWidth="207.0" styleClass="promptText" />
               <Label fx:id="labelEtnia" layoutX="855.0" layoutY="17.0" text="Etnia" />
-              <ComboBox fx:id="comboEtnia" layoutX="907.0" layoutY="13.0" prefHeight="32.0" prefWidth="227.0" />
+              <ComboBox fx:id="comboEtnia" layoutX="907.0" layoutY="13.0" prefHeight="32.0" prefWidth="227.0" styleClass="promptText" />
               <Label fx:id="labelReligiao" layoutX="14.0" layoutY="64.0" text="Religião" />
-              <ComboBox fx:id="comboReligao" layoutX="96.0" layoutY="61.0" prefHeight="32.0" prefWidth="276.0" />
+              <ComboBox fx:id="comboReligao" layoutX="96.0" layoutY="61.0" prefHeight="32.0" prefWidth="276.0" styleClass="promptText" />
               <Label fx:id="labelEmail" layoutX="527.0" layoutY="65.0" text="E-mail" />
-              <TextField fx:id="textFieldEmail" layoutX="591.0" layoutY="63.0" prefHeight="32.0" prefWidth="207.0" />
+              <TextField fx:id="textFieldEmail" layoutX="591.0" layoutY="63.0" prefHeight="32.0" prefWidth="207.0" styleClass="promptText" />
               <Text fx:id="textArroba" layoutX="804.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@" textAlignment="CENTER">
                   <font>
                       <Font name="System Bold" size="25.0" />
                   </font>
               </Text>
-              <ComboBox fx:id="comboServidor" layoutX="835.0" layoutY="62.0" prefHeight="32.0" prefWidth="299.0" />
+              <ComboBox fx:id="comboServidor" layoutX="835.0" layoutY="62.0" prefHeight="32.0" prefWidth="299.0" styleClass="promptText" />
          </children>
       </Pane>
       <Button fx:id="buttonCadastrar" layoutX="541.0" layoutY="453.0" mnemonicParsing="false" styleClass="btnCadastrar" text="Cadastrar" />

@@ -17,6 +17,17 @@ public class NotificadorAlertas {
         alerta.showAndWait();
     }
 
+    public static void mostrarMsgSucesso(String titulo, String msg) {
+        alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Mensagem de Sucesso");
+        if(titulo.isEmpty()) {
+            alerta.setHeaderText("Processo executado com sucesso!");
+        } else {
+            alerta.setHeaderText(titulo);
+        }
+        alerta.setContentText(msg);
+        alerta.showAndWait();
+    }
 
 
 }

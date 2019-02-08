@@ -1,5 +1,6 @@
 package bd;
 
+import java.io.IOException;
 import java.sql.*;
 
 public class Conexao {
@@ -24,7 +25,28 @@ public class Conexao {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(Conexao.getConnection().isClosed());
+        Connection conn = Conexao.getConnection();
+
+        Runnable r = () -> {
+            System.out.println("Contagem regressiva");
+            for (int i = 10; i > 0; i--) {
+                try {
+                    System.out.println("SGDB Aberto");
+                    System.out.println("Faltam " + i + " para fechar o DATABASE");
+                    Thread.sleep(1000);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        };
+
+        r.run();
+
+        System.out.println(conn.isClosed() ? "SGDB Aberto" : "SGDB Fechado");
+
+
     }
 
 }

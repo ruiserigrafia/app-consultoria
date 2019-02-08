@@ -1,8 +1,6 @@
 package controller;
 
-import ajudantes.NotificadorAlertas;
-import ajudantes.MascaraCampos;
-import ajudantes.ValidaCampos;
+import ajudantes.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -18,7 +16,6 @@ import model.*;
 
 import java.net.URL;
 import java.util.*;
-
 
 public class CadClienteController implements Initializable {
 
@@ -134,53 +131,54 @@ public class CadClienteController implements Initializable {
     private ComboBox<String> comboServidor;
 
     @FXML
+    private Button buttonCadastrar;
+
+    @FXML
     private Text textStatus;
 
     @FXML
     ProgressBar progressBar;
 
     private ToggleGroup grupoSexo;
+    private Cliente cliente;
     private Pais pais;
     private Estado estado;
     private Cidade cidade;
     private Etnia etnia;
+    private Naturalidade naturalidade;
+    private Nacionalidade nacionalidade;
     private Religiao religiao;
     private Servidor servidor;
 
     private Service service;
-    private List<String> elementos;
-    private String selecionar;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         try {
-
+            cliente = new Cliente();
             pais = new Pais();
             estado = new Estado();
             cidade = new Cidade();
             etnia = new Etnia();
+            naturalidade = new Naturalidade();
+            nacionalidade = new Nacionalidade();
             religiao = new Religiao();
             servidor = new Servidor();
-
             textStatus.setVisible(false);
-
             carregarDados();
             mascarearCampos();
             inicializarElementos();
             carregarEventos();
-
         } catch (Exception e) {
             NotificadorAlertas.mostrarMsgErro(e,"Erro ao tentar carregar componentes da tela de cadastro de cliente.");
         }
-
     }
 
     private void carregarDados() {
-
         carregarDadosBD();
         carregarDadosLocalmente();
-
     }
 
     private void carregarDadosLocalmente() {
@@ -202,7 +200,6 @@ public class CadClienteController implements Initializable {
                 return new Task() {
                     @Override
                     protected Object call() throws Exception {
-
                         anchorPane.setDisable(true);
                         textStatus.setVisible(true);
                         progressBar.setVisible(true);
@@ -211,40 +208,61 @@ public class CadClienteController implements Initializable {
                         Thread.sleep(1000);
 
                         updateProgress(0,0);
-                        int total = pais.mostrarTotal();
+                        int total = pais.obterTotalPaises();
                         updateMessage("Pesquisando registros de países...");
                         Thread.sleep(1000);
-                        for (Pais p : pais.carregarPaises()) {
+                        for (Pais p : pais.pesquisarPaises()) {
                             pais.getPaises().add(p);
                             updateProgress(p.getId(), total);
                             updateMessage("Carregando registros: " + p.getId() + " de " + total);
                         }
 
                         updateProgress(0,0);
-                        total = estado.mostrarTotal();
+                        total = estado.obterTotalEstados();
                         updateMessage("Pesquisando registros de estados...");
                         Thread.sleep(1000);
-                        for (Estado e : estado.carregarEstados()) {
+                        for (Estado e : estado.pesquisarEstados()) {
                             estado.getEstados().add(e);
                             updateProgress(e.getId(), total);
                             updateMessage("Carregando registros: " + e.getId() + " de " + total);
                         }
 
                         updateProgress(0,0);
-                        total = cidade.mostrarTotal();
+                        total = cidade.obterTotalCidades();
                         updateMessage("Pesquisando registros de cidades...");
                         Thread.sleep(1000);
-                        for (Cidade c : cidade.carregarCidades()) {
+                        for (Cidade c : cidade.pesquisarCidades()) {
                             cidade.getCidades().add(c);
                             updateProgress(c.getId(), total);
                             updateMessage("Carregando registros: " + c.getId() + " de " + total);
                         }
 
                         updateProgress(0,0);
+                        total = nacionalidade.obterTotalNacionalidades();
+                        updateMessage("Pesquisando registros de nacionalidades...");
+                        Thread.sleep(1000);
+
+                        for (Nacionalidade nc : nacionalidade.pesquisarNacionalidades()) {
+                            nacionalidade.getNacionalidades().add(nc);
+                            updateProgress(nc.getId(), total);
+                            updateMessage("Carregando registros: " + nc.getId() + " de " + total);
+                        }
+
+                        updateProgress(0,0);
+                        total = naturalidade.obterTotalNaturalidades();
+                        updateMessage("Pesquisando registros de naturalidades...");
+                        Thread.sleep(1000);
+                        for (Naturalidade nt : naturalidade.pesquisarNaturalidades()) {
+                            naturalidade.getNaturalidades().add(nt);
+                            updateProgress(nt.getId(), total);
+                            updateMessage("Carregando registros: " + nt.getId() + " de " + total);
+                        }
+
+                        updateProgress(0,0);
                         total = etnia.mostrarTotal();
                         updateMessage("Pesquisando registros de etnias...");
                         Thread.sleep(1000);
-                        for (Etnia e : etnia.carregarEtnias()) {
+                        for (Etnia e : etnia.pesquisarEtnias()) {
                             etnia.getEtnias().add(e);
                             updateProgress(e.getId(), total);
                             updateMessage("Carregando registros: " + e.getId() + " de " + total);
@@ -254,12 +272,11 @@ public class CadClienteController implements Initializable {
                         total = religiao.mostrarTotal();
                         updateMessage("Pesquisando registros de religião...");
                         Thread.sleep(1000);
-                        for (Religiao r : religiao.carregarReligioes()) {
+                        for (Religiao r : religiao.pesquisarPorReligioes()) {
                             religiao.getReligioes().add(r);
                             updateProgress(r.getId(), total);
                             updateMessage("Carregando registros: " + r.getId() + " de " + total);
                         }
-
 
                         updateProgress(0,0);
                         total = servidor.mostrarTotal();
@@ -363,52 +380,41 @@ public class CadClienteController implements Initializable {
     }
 
     private void carregarEventos() {
-
         elementosFocados();
         acaoElementos();
-
     }
 
     private void elementosFocados()  {
-
-        comboPais.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-
+        pickerNascimento.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             if(observableValue.getValue()) {
-
+                pickerNascimento.show();
+            }
+        });
+        comboPais.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if(observableValue.getValue()) {
                 comboEstado.getItems().clear();
                 comboEstado.setPromptText("Selecione um estado...");
                 comboCidade.setPromptText("Selecione uma cidade...");
                 comboCidade.getItems().clear();
-
                 if( comboPais.getItems().size() == 0 ) {
                     listarNomesPaises();
                 };
-
             } else {
                 comboPais.setEditable(false);
             }
-
         });
-
         comboEstado.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-
             if(observableValue.getValue()) {
-
                 comboCidade.getItems().clear();
                 comboCidade.setPromptText("Selecione uma cidade...");
-
                 if(comboEstado.getItems().size()==0) {
                     listarNomesEstados();
                 }
-
             } else {
                 comboEstado.setEditable(false);
             }
-
         });
-
         comboCidade.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-
             if(observableValue.getValue()) {
                 if(comboCidade.getItems().size()==0) {
                     listarNomesCidades();
@@ -416,11 +422,8 @@ public class CadClienteController implements Initializable {
             } else {
                 comboCidade.setEditable(false);
             }
-
         });
-
         comboNacionalidade.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-
             if(observableValue.getValue()) {
                 if(comboNacionalidade.getItems().size() == 0) {
                     listarNacionalidades();
@@ -428,11 +431,8 @@ public class CadClienteController implements Initializable {
             } else {
                 comboNacionalidade.setEditable(false);
             }
-
         });
-
         comboNaturalidade.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-
             if(observableValue.getValue()) {
                 if(comboNaturalidade.getItems().size() == 0) {
                     listarNaturalidades();
@@ -440,9 +440,7 @@ public class CadClienteController implements Initializable {
             } else {
                 comboNaturalidade.setEditable(false);
             }
-
         });
-
         comboEtnia.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             if(observableValue.getValue()) {
                 if(comboEtnia.getItems().size() == 0) {
@@ -452,7 +450,6 @@ public class CadClienteController implements Initializable {
                 comboEtnia.setEditable(false);
             }
         });
-
         comboReligao.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             if(observableValue.getValue()) {
                 if(comboReligao.getItems().size() == 0) {
@@ -462,7 +459,6 @@ public class CadClienteController implements Initializable {
                 comboReligao.setEditable(false);
             }
         });
-
         comboServidor.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             if(observableValue.getValue()) {
                 if(comboServidor.getItems().size() == 0) {
@@ -472,7 +468,6 @@ public class CadClienteController implements Initializable {
                 comboServidor.setEditable(false);
             }
         });
-
     }
 
     private void acaoElementos() {
@@ -491,19 +486,16 @@ public class CadClienteController implements Initializable {
         });
 
         comboNacionalidade.setOnAction(actionEvent -> {
-
-            comboNacionalidade.getSelectionModel().selectedItemProperty().addListener((observableValue, s, t1) -> {
-                pais.getPaises().sort((o1, o2) -> {
-                    if(o2.getNacionalidade() == observableValue.getValue()){
-                        pais.setId(o2.getId());                    }
-                    return 0;
-                });
-            });
-
+            for(Nacionalidade nc: nacionalidade.getNacionalidades()) {
+                if(nc.getNacionalidade() == comboNacionalidade.getSelectionModel().getSelectedItem()) {
+                    nacionalidade.setId(nc.getId());
+                }
+            }
         });
 
         comboNaturalidade.setOnAction(actionEvent -> {
-            estado.setId(comboNaturalidade.getSelectionModel().getSelectedIndex());
+            naturalidade.setId(comboNaturalidade.getSelectionModel().getSelectedIndex());
+
         });
 
         comboEtnia.setOnAction(actionEvent -> {
@@ -518,10 +510,23 @@ public class CadClienteController implements Initializable {
             servidor.setId(comboReligao.getSelectionModel().getSelectedIndex());
         });
 
+        buttonCadastrar.setOnAction(actionEvent -> {
+            try {
+                //validarCampos();
+                persisirDados();
+                String titulo;
+                titulo = "Nome: " + cliente.getNome() + "\r\n" +
+                        "Nascimento: " + cliente.getNascimento() + "\r\n" +
+                        "SexoEnum: " + cliente.getSexo() + "\r\n" +
+                        "Estado Civil: " + cliente.getEstadoCivil();
+                NotificadorAlertas.mostrarMsgSucesso(titulo, "ok");
+            } catch (Exception e) {
+                NotificadorAlertas.mostrarMsgErro(e, "Dados informados incorretamente");
+            }
+        });
     }
 
     private void listarNomesPaises() {
-
         try {
             popularComboBox(pais.listaNomesPaises(), "Brasil", comboPais);
         } catch (Exception ex) {
@@ -529,72 +534,58 @@ public class CadClienteController implements Initializable {
         }
     }
 
+
     private void listarNomesEstados(){
-
         try {
-
             if( pais.getId() > 0) {
                 estado.setPais(pais);
                 popularComboBox(estado.listaNomeEstadoPorPais(),"Pará", comboEstado);
             }
-
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de nomes de estados");
         }
-
     }
 
     private void listarNomesCidades() {
-
         try {
-
             if (estado.getId() > 0) {
                 cidade.setEstado(estado);
                 popularComboBox(cidade.listaPorEstado(), "Belém", comboCidade);
             }
-
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de nomes de estados");
         }
-
     }
 
     private void listarNacionalidades() {
-
         try {
-
-            popularComboBox(pais.listaNacionalidades(), "Brasileira", comboNacionalidade);
-
+            popularComboBox(nacionalidade.listaNomesNacionalidades(), "Brasileira", comboNacionalidade);
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de nacionalidades");
-        }
-    }
+        }    }
 
     private void listarNaturalidades() {
-
         try {
-
-            estado.setPais(pais);
-            popularComboBox(estado.listaNaturalidade(), "Paraense", comboNaturalidade);
-
+            if(nacionalidade.getId() > 0) {
+                naturalidade.setNacionalidade(nacionalidade);
+                popularComboBox(naturalidade.listaPorNacionalidade(), "Paraense", comboNaturalidade);
+            }
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de naturalidades");
-        }
+        } finally {
 
+        }
     }
 
     private void listarEtnias() {
-
         try {
             popularComboBox(etnia.listaEtnias(), comboEtnia);
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de etnias");
         }
-
     }
 
     private void listarReligioes() {
-
         try {
             popularComboBox(religiao.listaReligioes(), comboReligao);
         } catch (Exception ex) {
@@ -603,7 +594,6 @@ public class CadClienteController implements Initializable {
     }
 
     private void listarServidoresEmail() {
-
         try {
             popularComboBox(servidor.listaNomeServidor(), comboServidor);
         } catch (Exception ex) {
@@ -611,10 +601,9 @@ public class CadClienteController implements Initializable {
         }
     }
 
+
     private void popularComboBox(List<String> elementos, String selecionar, ComboBox<String> comboBox) {
-
         executarPopularComboBox(elementos, comboBox);
-
         service.stateProperty().addListener((observableValue1, o, t11) -> {
             //service.cancel();
             textStatus.setVisible(false);
@@ -630,31 +619,24 @@ public class CadClienteController implements Initializable {
                 } else {
                     comboBox.setPromptText("Selecione...");
                 }
-
                 return 0;
             });
 
         });
-
     }
 
     private void popularComboBox(List<String> elementos, ComboBox<String> comboBox) {
-
         executarPopularComboBox(elementos, comboBox);
-
         service.stateProperty().addListener((observableValue1, o, t11) -> {
             //service.cancel();
             textStatus.setVisible(false);
             progressBar.setVisible(false);
             anchorPane.setDisable(false);
             comboBox.requestFocus();
-
         });
-
     }
 
     private void executarPopularComboBox(List<String> elementos, ComboBox<String> comboBox) {
-
         service = new Service() {
             @Override
             protected Task createTask() {
@@ -696,13 +678,51 @@ public class CadClienteController implements Initializable {
         MascaraCampos.telFixoField(textFieldFixo);
         MascaraCampos.telMovelField(textFieldCelular);
         MascaraCampos.textoField(textFieldEndereco);
-        MascaraCampos.palavraField(textFieldEmail);
+        MascaraCampos.emailField(textFieldEmail);
     }
 
-    private void validarCampos() throws Exception {
-        ValidaCampos.validarData(pickerNascimento);
+    private void validarCampos() {
+        try {
+            ValidaCampos.validarData(pickerNascimento);
+        } catch (Exception e) {
+            NotificadorAlertas.mostrarMsgErro(e,"Erro tentar validar campos!");
+        }
     }
 
+    private void persisirDados() throws Exception {
 
+        cliente.setNome(textFieldNome.getText().trim());
+
+        cliente.setNascimento(pickerNascimento.getValue());
+
+        if(radioMasculno.isSelected()) {
+            cliente.setSexo(SexoEnum.MASCULINO);
+        } else if (radioFeminino.isSelected()){
+            cliente.setSexo(SexoEnum.FEMININO);
+        }
+
+        if(!comboEstadoCivil.getSelectionModel().isEmpty()){
+
+            switch (comboEstadoCivil.getSelectionModel().getSelectedItem()) {
+                case "Solteiro(a)" :
+                    cliente.setEstadoCivil(EstadoCivilEnum.SOLTEIRO);
+                    break;
+                case "Casado(a)":
+                    cliente.setEstadoCivil(EstadoCivilEnum.CASADO);
+                    break;
+                case "Divorciado(a)":
+                    cliente.setEstadoCivil(EstadoCivilEnum.DIVORCIADO);
+                    break;
+                case "Viuvo(a)":
+                    cliente.setEstadoCivil(EstadoCivilEnum.VIUVO);
+                    break;
+                    default:
+                        throw new Exception("Estado civil informado desconhecido!");
+            }
+
+        } else {
+            throw new Exception("Informe um estado civil");
+        }
+    }
 
 }
