@@ -9,45 +9,46 @@ import java.sql.ResultSet;
 public abstract class ModelDao {
 
     private Connection conecta;
-    private PreparedStatement prepararInstrucao;
-    private ResultSet resultados;
+    private PreparedStatement ps;
+    private ResultSet rs;
 
     public ModelDao() throws Exception {
         conecta = Conexao.getConnection();
-        prepararInstrucao = null;
-        resultados = null;
+        ps = null;
+        rs = null;
     }
 
     protected void prepararSQL(String sql) throws Exception {
-        prepararInstrucao = conecta.prepareStatement(sql);
+        ps = conecta.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
     }
 
-    protected void executarInstrucao() throws Exception {
-        prepararInstrucao.execute();
+    protected boolean executarSQL() throws Exception {
+        return ps.execute();
     }
 
-    protected ResultSet consultarBanco() throws Exception {
-        resultados = prepararInstrucao.executeQuery();
-        return resultados;
+    protected int mostrarIdGerado() throws Exception {
+        rs = ps.getGeneratedKeys();
+        return (rs.next())? Integer.parseInt(rs.getString(1)):0;
     }
 
-
-    protected PreparedStatement getPrepararInstrucao() {
-        return prepararInstrucao;
+    protected ResultSet executarQuerySQL() throws Exception {
+        rs = ps.executeQuery();
+        return rs;
     }
 
-    public void setPrepararInstrucao(PreparedStatement prepararInstrucao) {
-        this.prepararInstrucao = prepararInstrucao;
+    protected PreparedStatement getPs() {
+        return ps;
     }
 
-    protected ResultSet getResultados() {
-        return resultados;
+    protected void setPs(PreparedStatement ps) {
+        this.ps = ps;
     }
 
-    protected void setResultados(ResultSet resultados) {
-        this.resultados = resultados;
+    protected ResultSet getRs() {
+        return rs;
     }
 
-
-    
+    protected void setRs(ResultSet rs) {
+        this.rs = rs;
+    }
 }

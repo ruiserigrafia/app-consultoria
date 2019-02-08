@@ -14,19 +14,22 @@ public class CidadeDao extends ModelDao {
 
     }
 
-    public void inserirCidade(Cidade cidade) throws Exception {
+    public int inserirCidade(Cidade cidade) throws Exception {
         try {
             prepararSQL(
                 "INSERT INTO cidade VALUES (DEFAULT, ?, ?)"
             );
-            getPrepararInstrucao().setString(1, cidade.getNome());
-            getPrepararInstrucao().setInt(2, cidade.getEstado().getId());
-            executarInstrucao();
-
+            getPs().setString(1, cidade.getNome());
+            getPs().setInt(2, cidade.getEstado().getId());
+            if(executarSQL()){
+                return mostrarIdGerado();
+            } else {
+                throw new Exception("Erro ao tentar inserir cidade");
+            }
         } catch (SQLException sqle) {
-            throw new RuntimeException(sqle.getMessage());
+            throw new Exception(sqle);
         } finally {
-            getPrepararInstrucao().close();
+            getPs().close();
         }
     }
 
@@ -35,12 +38,14 @@ public class CidadeDao extends ModelDao {
             prepararSQL(
                     "UPDATE cidade SET nome = ?, Estado_id = ? WHERE id = ?"
             );
-            getPrepararInstrucao().setInt(1,cidade.getId());
-            executarInstrucao();
+            getPs().setInt(1,cidade.getId());
+            if(! executarSQL() ){
+                throw new Exception("Erro tentar atualizar cidade");
+            };
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
+            getPs().close();
         }
     }
 
@@ -49,34 +54,56 @@ public class CidadeDao extends ModelDao {
             prepararSQL(
                     "DELETE FROM cidade WHERE id = ?"
             );
-            getPrepararInstrucao().setInt(1, id);
-            executarInstrucao();
+            getPs().setInt(1, id);
+            executarSQL();
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
+            getPs().close();
         }
     }
 
-    public Cidade pesquisarUm(int id) throws Exception {
+    public Cidade pesquisarPorId(int id) throws Exception {
         try {
             prepararSQL(
                     "SELECT * FROM cidade WHERE id = ?"
             );
-            getPrepararInstrucao().setInt(1, id);
-            consultarBanco();
+            getPs().setInt(1, id);
+            executarQuerySQL();
             Cidade cidade = new Cidade();
-            while (getResultados().next()) {
-                cidade.setId(getResultados().getInt(1));
-                cidade.setNome(getResultados().getString(2));
-                cidade.getEstado().setId(getResultados().getInt(3));
+            while (getRs().next()) {
+                cidade.setId(getRs().getInt(1));
+                cidade.setNome(getRs().getString(2));
+                cidade.getEstado().setId(getRs().getInt(3));
             }
             return cidade;
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
+        }
+    }
+
+    public Cidade pesquisarPorNome(String nome) throws Exception {
+        try {
+            prepararSQL(
+                    "SELECT * FROM cidade WHERE nome = ?"
+            );
+            getPs().setString(1, nome);
+            executarQuerySQL();
+            Cidade cidade = new Cidade();
+            while (getRs().next()) {
+                cidade.setId(getRs().getInt(1));
+                cidade.setNome(getRs().getString(2));
+                cidade.getEstado().setId(getRs().getInt(3));
+            }
+            return cidade;
+        } catch (SQLException sqle) {
+            throw new RuntimeException(sqle.getMessage());
+        } finally {
+            getPs().close();
+            getRs().close();
         }
     }
 
@@ -85,28 +112,28 @@ public class CidadeDao extends ModelDao {
             prepararSQL(
                 "SELECT * from cidade"
             );
-
-            consultarBanco();
-
+            executarQuerySQL();
             List<Cidade> cidades = new ArrayList<>();
-
-
-            while (getResultados().next()) {
+            while (getRs().next()) {
                 cidades.add(
                         new Cidade(
-                                getResultados().getInt(1),
-                                getResultados().getString(2),
-                                new Estado(getResultados().getInt(3))
+                                getRs().getInt(1),
+                                getRs().getString(2),
+                                new Estado(
+                                        getRs().getInt(3),
+                                        null,
+                                        null,
+                                        null
+                                )
                         )
                 );
             }
             return cidades;
-
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
     }
 
@@ -115,23 +142,17 @@ public class CidadeDao extends ModelDao {
             prepararSQL(
                     "SELECT COUNT(*) FROM cidade"
             );
-
-            consultarBanco();
-
-            while (getResultados().next()) {
-                return getResultados().getInt(1);
+            executarQuerySQL();
+            while (getRs().next()) {
+                return getRs().getInt(1);
             }
-
         } catch (SQLException sqle) {
             throw new Exception(sqle);
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
-
         return 0;
-    };
-
-
+    }
 
 }

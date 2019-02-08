@@ -18,15 +18,15 @@ public class UsuarioDao extends ModelDao {
             prepararSQL(
                     "INSERT INTO Usuario(login,senha) value(?,?)"
             );
-            getPrepararInstrucao().setString(1, usuario.getLogin());
-            getPrepararInstrucao().setString(2, usuario.getSenha());
-             executarInstrucao();
+            getPs().setString(1, usuario.getLogin());
+            getPs().setString(2, usuario.getSenha());
+             executarSQL();
 
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
 
     }
@@ -36,15 +36,15 @@ public class UsuarioDao extends ModelDao {
             prepararSQL(
                 "UPDATE usuario SET login = ?, senha = ? where id = ?"
             );
-            getPrepararInstrucao().setString(1, usuario.getLogin());
-            getPrepararInstrucao().setString(2,usuario.getSenha());
-            getPrepararInstrucao().setInt(3,usuario.getId());
-            executarInstrucao();
+            getPs().setString(1, usuario.getLogin());
+            getPs().setString(2,usuario.getSenha());
+            getPs().setInt(3,usuario.getId());
+            executarSQL();
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
     }
 
@@ -53,12 +53,12 @@ public class UsuarioDao extends ModelDao {
             prepararSQL(
                     "DELETE FROM usuario WHERE id=?"
             );
-            executarInstrucao();
+            executarSQL();
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
     }
 
@@ -68,21 +68,21 @@ public class UsuarioDao extends ModelDao {
             prepararSQL(
                 "Select * from Usuario WHERE id=?"
             );
-            getPrepararInstrucao().setInt(1, id);
-            consultarBanco();
-            if(getResultados().next()) {
+            getPs().setInt(1, id);
+            executarQuerySQL();
+            if(getRs().next()) {
                 return new Usuario(
                         id,
-                        getResultados().getString("login"),
-                        getResultados().getString("senha")
+                        getRs().getString("login"),
+                        getRs().getString("senha")
                 );
             }
 
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
 
         return null;
@@ -95,17 +95,17 @@ public class UsuarioDao extends ModelDao {
                     "SELECT * FROM usuario"
             );
 
-            consultarBanco();
+            executarQuerySQL();
 
             List<Usuario> listaUsuario = new ArrayList<>();
 
-            while (getResultados().next()) {
+            while (getRs().next()) {
 
                 listaUsuario.add(
                        new Usuario(
-                               getResultados().getInt(1),
-                               getResultados().getString(2),
-                               getResultados().getString(3)
+                               getRs().getInt(1),
+                               getRs().getString(2),
+                               getRs().getString(3)
                        )
                 );
             }
@@ -115,8 +115,8 @@ public class UsuarioDao extends ModelDao {
         } catch (SQLException sqle) {
             throw new  RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
     }
 
@@ -124,10 +124,10 @@ public class UsuarioDao extends ModelDao {
 
         try {
             prepararSQL("select * from Usuario where id=?");
-            getPrepararInstrucao().setInt(1, id);
-            consultarBanco();
+            getPs().setInt(1, id);
+            executarQuerySQL();
 
-            if(getResultados().next()) {
+            if(getRs().next()) {
                 return true;
             } else {
                 return false;
@@ -136,8 +136,8 @@ public class UsuarioDao extends ModelDao {
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
 
     }
@@ -146,10 +146,10 @@ public class UsuarioDao extends ModelDao {
 
         try {
             prepararSQL("select * from Usuario where login=?");
-            getPrepararInstrucao().setString(1, login);
-            consultarBanco();
+            getPs().setString(1, login);
+            executarQuerySQL();
 
-            if(getResultados().next()) {
+            if(getRs().next()) {
                 return true;
             } else {
                 return false;
@@ -158,8 +158,8 @@ public class UsuarioDao extends ModelDao {
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
 
     }
@@ -168,10 +168,10 @@ public class UsuarioDao extends ModelDao {
 
         try {
             prepararSQL("select * from Usuario where login=?");
-            getPrepararInstrucao().setString(1, senha);
-            consultarBanco();
+            getPs().setString(1, senha);
+            executarQuerySQL();
 
-            if(getResultados().next()) {
+            if(getRs().next()) {
                 return true;
             } else {
                 return false;
@@ -180,8 +180,8 @@ public class UsuarioDao extends ModelDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
 
     }

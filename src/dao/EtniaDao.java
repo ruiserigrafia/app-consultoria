@@ -17,13 +17,13 @@ public class EtniaDao extends ModelDao {
             prepararSQL(
                     "INSERT INTO Etnia(definicao) VALUE(?)"
             );
-            getPrepararInstrucao().setString(1,etnia.getDefinicao());
-            executarInstrucao();
+            getPs().setString(1,etnia.getDefinicao());
+            executarSQL();
 
         } catch (SQLException sqle) {
             throw new Exception(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
+            getPs().close();
         }
     }
 
@@ -32,41 +32,49 @@ public class EtniaDao extends ModelDao {
             prepararSQL(
                     "UPDATE etnia SET = ? WHERE id = ?"
             );
-            getPrepararInstrucao().setString(1,etnia.getDefinicao());
-            getPrepararInstrucao().setInt(2,etnia.getId());
-            executarInstrucao();
+            getPs().setString(1,etnia.getDefinicao());
+            getPs().setInt(2,etnia.getId());
+            executarSQL();
         } catch (SQLException sqle) {
             throw new Exception(sqle.getMessage());
         }
     }
 
-    public void deletarEtnia(Etnia etnia) throws Exception {
+    public void deletarEtnia(int id) throws Exception {
         try{
 
             prepararSQL(
                     "DELETE FROM etnia WHERE id = ?"
             );
-            getPrepararInstrucao().setInt(1, etnia.getId());
-            executarInstrucao();
+            getPs().setInt(1, id);
+            executarSQL();
 
         } catch (SQLException sqle) {
             throw new Exception(sqle.getMessage());
         }
     }
 
+    public Etnia pesquisaPorId(int id) throws Exception {
+        return null;
+    }
+
+    public Etnia pesquisarPorDefinicao(String definicao) throws Exception {
+        return null;
+    }
+
     public List<Etnia> pesquisarTodos() throws Exception {
         try {
             prepararSQL("SELECT * FROM etnia");
-            consultarBanco();
+            executarQuerySQL();
 
             List<Etnia> etnias = new ArrayList<>();
 
-            while (getResultados().next() ) {
+            while (getRs().next() ) {
 
                 etnias.add(
                         new Etnia(
-                                getResultados().getInt(1),
-                                getResultados().getString(2)
+                                getRs().getInt(1),
+                                getRs().getString(2)
                         )
                 );
 
@@ -78,15 +86,16 @@ public class EtniaDao extends ModelDao {
     }
 
     public int contarQuantidadeEtnia() throws Exception {
+
         try {
             prepararSQL(
                     "SELECT COUNT(*) FROM etnia"
             );
 
-            consultarBanco();
+            executarQuerySQL();
 
-            while (getResultados().next()) {
-                return getResultados().getInt(1);
+            while (getRs().next()) {
+                return getRs().getInt(1);
             }
 
         } catch (SQLException sqle) {
@@ -95,6 +104,5 @@ public class EtniaDao extends ModelDao {
         return 0;
 
     }
-
 
 }

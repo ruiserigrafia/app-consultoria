@@ -15,18 +15,17 @@ public class PaisDao extends ModelDao {
     public void inserirPais(Pais pais) throws Exception {
         try {
             prepararSQL(
-                "INSERT INTO pais(nome, isp, ddd, nacionalidade) VALUES (?, ?, ?, ?)"
+                "INSERT INTO pais(nome, isp, ddd) VALUES (?, ?, ?)"
             );
-            getPrepararInstrucao().setString(1, pais.getNome());
-            getPrepararInstrucao().setString(2, pais.getISP());
-            getPrepararInstrucao().setInt(3,pais.getDDI());
-            getPrepararInstrucao().setString(4,pais.getNacionalidade());
-            executarInstrucao();
+            getPs().setString(1, pais.getNome());
+            getPs().setString(2, pais.getISP());
+            getPs().setInt(3,pais.getDDI());
+            executarSQL();
         } catch (SQLException sqle) {
-            throw new RuntimeException(sqle.getMessage());
+            throw new RuntimeException(sqle);
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
     }
 
@@ -34,19 +33,18 @@ public class PaisDao extends ModelDao {
 
         try{
             prepararSQL(
-                "UPDATE pais SET nome = ?, isp = ?, ddd = ?, nacionalidade = ? WHERE id = ?"
+                "UPDATE pais SET nome = ?, isp = ?, ddd = ? WHERE id = ?"
             );
-            getPrepararInstrucao().setString(1, pais.getNome());
-            getPrepararInstrucao().setString(2, pais.getISP());
-            getPrepararInstrucao().setInt(3,pais.getDDI());
-            getPrepararInstrucao().setString(4, pais.getNacionalidade());
-            getPrepararInstrucao().setInt(5, pais.getId());
-            executarInstrucao();
+            getPs().setString(1, pais.getNome());
+            getPs().setString(2, pais.getISP());
+            getPs().setInt(3,pais.getDDI());
+            getPs().setInt(4, pais.getId());
+            executarSQL();
         } catch (SQLException sqle) {
-            throw new RuntimeException(sqle.getMessage());
+            throw new RuntimeException(sqle);
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
 
     }
@@ -57,37 +55,148 @@ public class PaisDao extends ModelDao {
             prepararSQL(
                     "DELETE FROM pais WHERE id = ?"
             );
-            getPrepararInstrucao().setInt(1 , id);
-            executarInstrucao();
+            getPs().setInt(1 , id);
+            executarSQL();
         } catch (SQLException sqle) {
-            throw new RuntimeException(sqle.getMessage());
+            throw new RuntimeException(sqle);
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
 
     }
 
-    public int idPorNacionalidade(Pais pais) throws Exception {
+    public Pais pesquisarPorid(int id) throws Exception {
 
         try {
-            prepararSQL(
-                "SELECT id FROM pais WHERE nacionalidade = ?"
-            );
-            getPrepararInstrucao().setString(1, pais.getNacionalidade());
-            consultarBanco();
-            int id = 0;
-            while (getResultados().next()) {
-                id = getResultados().getInt(1);
-            }
-            return id;
-        } catch (SQLException sqle) {
-            throw new RuntimeException(sqle.getMessage());
-        } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
-        }
 
+            prepararSQL(
+                    "SELECT * FROM pais WHERE id = ?"
+            );
+            getPs().setInt(1, id);
+            executarQuerySQL();
+            while ( getRs().next()) {
+                return new Pais(
+                        getRs().getInt(1),
+                        getRs().getString(2),
+                        getRs().getString(3),
+                        getRs().getInt(4)
+                );
+            };
+
+        } catch (SQLException sqle) {
+            throw new Exception(sqle);
+        }
+        return null;
+    }
+
+    public Pais pesquisarPorNome(String nome) throws Exception {
+
+        try {
+
+            prepararSQL(
+                    "SELECT * FROM pais WHERE nome = ?"
+            );
+            getPs().setString(1, nome);
+            executarQuerySQL();
+            while ( getRs().next()) {
+                return new Pais(
+                        getRs().getInt(1),
+                        getRs().getString(2),
+                        getRs().getString(3),
+                        getRs().getInt(4)
+                );
+            };
+
+        } catch (SQLException sqle) {
+            throw new Exception(sqle);
+        } finally {
+            getPs().close();
+            getRs().close();
+        }
+        return null;
+
+    }
+
+    public Pais pesquisarPorISP(String isp) throws Exception {
+        try {
+
+            prepararSQL(
+                    "SELECT * FROM pais WHERE isp = ?"
+            );
+            getPs().setString(1, isp);
+            executarQuerySQL();
+            while ( getRs().next()) {
+                return new Pais(
+                        getRs().getInt(1),
+                        getRs().getString(2),
+                        getRs().getString(3),
+                        getRs().getInt(4)
+                );
+            };
+
+        } catch (SQLException sqle) {
+            throw new Exception(sqle);
+        } finally {
+            getPs().close();
+            getRs().close();
+        }
+        return null;
+    }
+
+    public Pais pesquisarPorDDI(int ddi) throws Exception {
+
+        try {
+
+            prepararSQL(
+                    "SELECT * FROM pais WHERE ddi = ?"
+            );
+            getPs().setInt(1, ddi);
+            executarQuerySQL();
+            while ( getRs().next()) {
+                return new Pais(
+                        getRs().getInt(1),
+                        getRs().getString(2),
+                        getRs().getString(3),
+                        getRs().getInt(4)
+                );
+            };
+
+        } catch (SQLException sqle) {
+            throw new Exception(sqle);
+        } finally {
+            getPs().close();
+            getRs().close();
+        }
+        return null;
+
+    }
+
+    public Pais pesquisarPorNacionalidade(String nacionalidade) throws Exception {
+
+        try {
+
+            prepararSQL(
+                "SELECT * FROM pais WHERE nacionalidade = ?"
+            );
+            getPs().setString(1, nacionalidade);
+            executarQuerySQL();
+            while ( getRs().next()) {
+                return new Pais(
+                        getRs().getInt(1),
+                        getRs().getString(2),
+                        getRs().getString(3),
+                        getRs().getInt(4)
+                );
+            };
+
+        } catch (SQLException sqle) {
+            throw new Exception(sqle);
+        } finally {
+            getPs().close();
+            getRs().close();
+        }
+        return null;
     }
 
     public List<Pais> pesquisarTodos() throws Exception {
@@ -95,17 +204,16 @@ public class PaisDao extends ModelDao {
             prepararSQL(
                     "SELECT * FROM pais"
             );
-            consultarBanco();
+            executarQuerySQL();
             List<Pais> listaPaises = new ArrayList<>();
 
-            while (getResultados().next()) {
+            while (getRs().next()) {
                 listaPaises.add(
                         new Pais(
-                                getResultados().getInt("id"),
-                                getResultados().getString("nome"),
-                                getResultados().getString("isp"),
-                                getResultados().getInt("ddi"),
-                                getResultados().getString("nacionalidade")
+                                getRs().getInt("id"),
+                                getRs().getString("nome"),
+                                getRs().getString("isp"),
+                                getRs().getInt("ddi")
                         )
                 );
             }
@@ -113,27 +221,29 @@ public class PaisDao extends ModelDao {
             return listaPaises;
 
         } catch (SQLException sqle) {
-            throw new Exception(sqle.getMessage());
+            throw new Exception(sqle);
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
     }
 
     public int contarPaises() throws Exception {
         try {
+
             prepararSQL(
                     "SELECT COUNT(*) FROM pais"
             );
-            consultarBanco();
-            if(getResultados().next()) {
-                return getResultados().getInt(1);
-            }
+            executarQuerySQL();
+            return (getRs().next()) ? getRs().getInt(1) : 0;
 
         } catch (SQLException sqle) {
             throw new Exception(sqle);
+        } finally {
+            getPs().close();
+            getRs().close();
         }
-        return 0;
+
     }
 
     public String procurarPorIniciais(String iniciais) throws Exception {
@@ -142,24 +252,18 @@ public class PaisDao extends ModelDao {
             prepararSQL(
                     "SELECT nome FROM pais where nome LIKE '^?'"
             );
-            getPrepararInstrucao().setString(1,iniciais);
-            consultarBanco();
-            System.out.println(getPrepararInstrucao().executeQuery().getStatement());
-            String nome = "";
+            getPs().setString(1,iniciais);
+            executarQuerySQL();
+            return (getRs().next()) ? getRs().getString(1): null;
 
-            while (getResultados().next()) {
-                nome = getResultados().getString(1);
-            }
-            return nome;
         } catch (SQLException sqle) {
-            throw new Exception(sqle.getMessage());
+            throw new Exception(sqle);
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
 
     }
-
 
 
 }

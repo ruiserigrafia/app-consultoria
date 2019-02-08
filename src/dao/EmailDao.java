@@ -1,24 +1,26 @@
 package dao;
 
+import model.Email;
 import model.Servidor;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServidorDao extends ModelDao {
+public class EmailDao extends ModelDao {
 
-    public ServidorDao() throws Exception {
+    public EmailDao() throws Exception {
 
     }
 
-    public void inserirServidor(Servidor servidor) throws Exception {
+    public void inserirEmail(Email email) throws Exception {
 
         try {
             prepararSQL(
-                    "INSERT INTO servidor VALUES (default, ?)"
+                    "SELECT email VALUES (default, ?, ?)"
             );
-            getPs().setString(1, servidor.getNome());
+            getPs().setString(1, email.getUsuario());
+            getPs().setInt(2, email.getServidor().getId());
             executarSQL();
         } catch (SQLException sqle) {
             throw new Exception(sqle);
@@ -28,14 +30,15 @@ public class ServidorDao extends ModelDao {
 
     }
 
-    public void alterarServidor(Servidor servidor) throws Exception {
+    public void alterarEmail(Email email) throws Exception {
 
         try {
             prepararSQL(
-                    "UPDATE servidor SET nome = ? WHERE id = ?"
+                    "UPDATE email SET usuario = ?, servidor_id = ? WHERE id = ?"
             );
-            getPs().setString(1, servidor.getNome());
-            getPs().setInt(2, servidor.getId());
+            getPs().setString(1, email.getUsuario());
+            getPs().setInt(2, email.getServidor().getId());
+            getPs().setInt(3, email.getId());
             executarSQL();
         } catch (SQLException sqle) {
             throw new Exception(sqle);
@@ -45,12 +48,11 @@ public class ServidorDao extends ModelDao {
 
     }
 
-
-    public void deletarServidor(int id) throws Exception {
+    public void deletarEmail(int id) throws Exception {
 
         try {
             prepararSQL(
-                    "DELETE FROM servidor WHERE id = ?"
+                    "DELETE FROM email WHERE id = ?"
             );
             getPs().setInt(1, id);
             executarSQL();
@@ -62,87 +64,80 @@ public class ServidorDao extends ModelDao {
 
     }
 
-    public Servidor pesquisarId(int id) throws Exception{
+    public Email pesquisarPorId(int id) throws Exception {
 
         try {
             prepararSQL(
-                "SELECT * FROM servidor WHERE id = ?"
+                    "SELECT * FROM email WHERE id = ?"
             );
             getPs().setInt(1, id);
             executarQuerySQL();
             while (getRs().next()) {
-                return new Servidor(
+
+                return new Email(
                         getRs().getInt(1),
-                        getRs().getString(2)
+                        getRs().getString(2),
+                        new Servidor(getRs().getInt(3), null)
                 );
             }
         } catch (SQLException sqle) {
             throw new Exception(sqle);
         } finally {
             getPs().close();
-            getRs().close();
         }
-
         return null;
     }
 
-    public Servidor pesquisarNome(String nome) throws Exception {
+    public Email pesquisarPorUsuario(String usuario) throws Exception {
 
         try {
-
             prepararSQL(
-                    "SELECT * FROM servidor WHERE nome = ?"
+                    "SELECT * FROM email WHERE usuario = ?"
             );
-            getPs().setString(1, nome);
+            getPs().setString(1, usuario);
             executarQuerySQL();
             while (getRs().next()) {
-                return new Servidor(
+
+                return new Email(
                         getRs().getInt(1),
-                        getRs().getString(2)
+                        getRs().getString(2),
+                        new Servidor(getRs().getInt(3), null)
                 );
             }
         } catch (SQLException sqle) {
             throw new Exception(sqle);
         } finally {
             getPs().close();
-            getRs().close();
         }
-
         return null;
+
     }
 
-    public List<Servidor> pesquisarTodos() throws Exception {
+
+    public List<Email> pesquisarTodos() throws Exception {
+
+        List<Email> listaEmail = new ArrayList<>();
+
         try {
+
             prepararSQL(
-                    "SELECT * FROM servidor"
+                    "SELECT * FROM email"
             );
             executarQuerySQL();
-            List<Servidor> servidores = new ArrayList<>();
             while (getRs().next()) {
-                servidores.add(
-                        new Servidor(
+                listaEmail.add(
+                        new Email(
                                 getRs().getInt(1),
-                                getRs().getString(2)
+                                getRs().getString(2),
+                                new Servidor(
+                                        getRs().getInt(3),
+                                        null
+                                )
                         )
                 );
-            };
-            return servidores;
-        } catch (SQLException sqle) {
-            throw new Exception(sqle);
-        } finally {
-            getPs().close();
-            getRs().close();
-        }
-    }
+            }
 
-    public int contarQuantidadeServidores() throws Exception {
-        try {
 
-            prepararSQL(
-                    "SELECT COUNT(*) FROM servidor"
-            );
-            executarQuerySQL();
-            return (getRs().next())? getRs().getInt(1):0;
         } catch (SQLException sqle) {
             throw new Exception(sqle);
         } finally {
@@ -150,5 +145,8 @@ public class ServidorDao extends ModelDao {
             getRs().close();
         }
 
+        return listaEmail;
+
     }
+
 }

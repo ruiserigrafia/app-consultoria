@@ -13,158 +13,189 @@ public class EstadoDao extends ModelDao {
 
     }
 
-    public void inserirEstado(Estado estado) throws Exception {
+    public int inserirEstado(Estado estado) throws Exception {
         try {
             prepararSQL(
-                    "INSERT INTO estado(id, nome, uf, naturalidade, Pais_id) VALUES(DEFAULT ,?,?,?,?)"
+                    "INSERT INTO estado VALUES(DEFAULT, ?, ?, ?)"
             );
-
-            getPrepararInstrucao().setString(1,estado.getNome());
-            getPrepararInstrucao().setString(2,estado.getUf());
-            getPrepararInstrucao().setString(3,estado.getNaturalidade());
-            getPrepararInstrucao().setString(4,estado.getPais().getNome());
-            getPrepararInstrucao().execute();
+            getPs().setString(1,estado.getNome());
+            getPs().setString(2,estado.getUf());
+            getPs().setString(3,estado.getPais().getNome());
+            if(executarSQL()){
+                return mostrarIdGerado();
+            } else {
+                throw new Exception("Erro ao tentar inserir estado");
+            }
         } catch (SQLException sqle) {
-            throw new RuntimeException(sqle.getMessage());
+            throw new Exception(sqle);
         } finally {
-            getPrepararInstrucao().close();
+            getPs().close();
         }
     }
 
     public void alterarEstado(Estado estado) throws Exception {
         try {
             prepararSQL(
-                    "UPDATE estado SET nome = ?, uf = ?, naturalidade = ?, Pais_id = ? WHERE id = ?"
+                    "UPDATE estado SET nome = ?, uf = ?, Pais_id = ? WHERE id = ?"
             );
-
-            getPrepararInstrucao().setString(1, estado.getNome());
-            getPrepararInstrucao().setString(2, estado.getUf());
-            getPrepararInstrucao().setString(3, estado.getNaturalidade());
-            getPrepararInstrucao().setInt(4, estado.getPais().getId());
-            getPrepararInstrucao().setInt(5,estado.getId());
-            getPrepararInstrucao().execute();
+            getPs().setString(1, estado.getNome());
+            getPs().setString(2, estado.getUf());
+            getPs().setInt(3, estado.getPais().getId());
+            getPs().setInt(4,estado.getId());
+            if( ! executarSQL() ){
+                throw new Exception("Erro ao tentar alterar estado");
+            }
         } catch (SQLException sqle) {
-            throw new RuntimeException(sqle.getMessage());
+            throw new Exception(sqle);
         } finally {
-            getPrepararInstrucao().close();
+            getPs().close();
         }
     }
-
 
     public void deletarEstado(int id) throws Exception {
         try {
             prepararSQL(
-                    "DELETE FROM usuario where id = " + id
+                    "DELETE FROM usuario WHERE id = ?"
             );
-            getPrepararInstrucao().execute();
+            getPs().setInt(1, id);
+            executarSQL();
         } catch(SQLException sqle) {
-            throw new RuntimeException(sqle.getMessage());
+            throw new Exception(sqle);
         } finally {
-            getPrepararInstrucao().close();
+            getPs().close();
         }
     }
 
-    public Object pesquisarID(int id) throws Exception {
+    public Estado pesquisarUm(int id) throws Exception {
         try {
             prepararSQL(
-                    "SELECT * FROM estado WHERE estado.id = ?"
+                    "SELECT * FROM estado WHERE id = ?"
             );
-            getPrepararInstrucao().setInt(1, id);
-            consultarBanco();
-            Estado estado = new Estado();
-            while (getResultados().next()) {
-                estado.setId(getResultados().getInt(1));
-                estado.setNome(getResultados().getString(2));
-                estado.setUf(getResultados().getString(3));
-                estado.getPais().setId(getResultados().getInt(4));
+            getPs().setInt(1, id);
+            executarQuerySQL();
+            while (getRs().next()) {
+                return new Estado(
+                    getRs().getInt(1),
+                    getRs().getString(2),
+                    getRs().getString(3),
+                    new Pais(
+                        getRs().getInt(5),
+                            null,
+                            null,
+                            0
+                    )
+                );
             }
-            return  estado;
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle.getMessage());
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
+        return null;
     }
 
     public List<Estado> pesquisarTodos() throws Exception {
-
         try {
             prepararSQL(
                     "SELECT * FROM estado"
             );
-            consultarBanco();
-
+            executarQuerySQL();
             List<Estado> listaEstados = new ArrayList<>();
-
-
-
-            while ( getResultados().next()) {
-
+            while ( getRs().next()) {
                 listaEstados.add(
                         new Estado(
-                                getResultados().getInt(1),
-                                getResultados().getString(2),
-                                getResultados().getString(3),
-                                getResultados().getString(4),
-                                new Pais(getResultados().getInt(5))
+                                getRs().getInt(1),
+                                getRs().getString(2),
+                                getRs().getString(3),
+                                new Pais(
+                                        getRs().getInt(5),
+                                        null,
+                                        null,
+                                        0
+                                )
                         )
-
                 );
-
             }
-
             return listaEstados;
-
         } catch (SQLException sqle) {
-            throw new RuntimeException(sqle.getMessage());
+            throw new Exception(sqle);
+        } finally {
+            getPs().close();
+            getRs().close();
         }
     }
 
+    public Estado pesquisarPorNome(String nome) throws Exception {
+        return pesquisarString("SELECT * FROM estado WHERE nome = ?", nome);
+    }
+
+    public Estado pesquisarPorUF(String uf) throws Exception {
+        return pesquisarString("SELECT * FROM estado WHERE uf = ?", uf);
+    }
+
+    public Estado pesquisarPorNaturalidade(String naturalidade) throws Exception {
+       return pesquisarString("SELECT * FROM estado WHERE naturalidade = ?", naturalidade);
+    }
 
     public int contarQuantidadeEstado() throws Exception {
         try {
             prepararSQL(
                     "SELECT COUNT(*) FROM estado"
             );
+            executarQuerySQL();
+            return (getRs().next()) ? getRs().getInt(1) : 0;
+        } catch (SQLException sqle) {
+            throw new Exception(sqle);
+        } finally {
+            getPs().close();
+            getRs().close();
+        }
+    }
 
-            consultarBanco();
+    public boolean existeNomeEstado (String nome) throws Exception{
+        try{
+            prepararSQL(
+                "SELECT * FROM estado WHERE nome = ?"
+            );
+            getPs().setString(1,nome);
+            executarQuerySQL();
 
-            if(getResultados().next()) {
-                return getResultados().getInt(1);
-            }
+            return (getRs().next()) ? true: false;
 
         } catch (SQLException sqle) {
             throw new Exception(sqle);
         } finally {
-            getPrepararInstrucao().close();
-            getResultados().close();
+            getPs().close();
+            getRs().close();
         }
-
-        return 0;
-
     }
 
-
-    public boolean existeNomeEstado (String nome) throws Exception{
-
-        try{
-            prepararSQL(
-                "SELECT * FROM estado WHERE nome=?"
-            );
-            getPrepararInstrucao().setString(1,nome);
-            consultarBanco();
-            boolean existe = false;
-            if(getResultados().next()) {
-                existe = true;
+    public Estado pesquisarString(String sql, String string) throws Exception {
+        try {
+            prepararSQL(sql);
+            getPs().setString(1, string);
+            executarQuerySQL();
+            while (getRs().next()) {
+                return new Estado(
+                        getRs().getInt(1),
+                        getRs().getString(2),
+                        getRs().getString(3),
+                        new Pais(
+                                getRs().getInt(5),
+                                null,
+                                null,
+                                0
+                        )
+                );
             }
-            return existe;
         } catch (SQLException sqle) {
-            throw new RuntimeException(sqle.getMessage());
+            throw new Exception(sqle);
+        } finally {
+            getPs().close();
+            getRs().close();
         }
-
+        return null;
     }
-
-
 
 }
