@@ -1,7 +1,7 @@
 
 # App Consultoria
 
-## Sobre o proejto
+## Sobre o projeto
 Projeto de desenvolvimento de uma aplicação, voltada para o gerenciamento de uma consultoria de avaliação física e nutricional.
 ## Ambiente para desenvolvimento
 ![JAVA](https://img.shields.io/badge/Java-Desenvolvimento-blue.svg)
@@ -125,6 +125,7 @@ Vá para Properties -> Libraries -> Compile -> Module-path -> + -> Add Library e
 
 Depois que o caminho de classe for definido, as classes JavaFX serão reconhecidas pelo IDE.
 ![Javax NetBeans2](https://openjfx.io/openjfx-docs/images/ide/netbeans/ide/netbeans04.png)
+
 Você pode adicionar uma classe principal Main, com base nesta um , com um FXML arquivo e um [controller](https://openjfx.io/IDE/NetBeans/Non-Modular/Java/hellofx/src/hellofx/Controller.java).
 
 ![javax NetBeans3](https://openjfx.io/openjfx-docs/images/ide/netbeans/ide/netbeans05.png)
@@ -228,7 +229,7 @@ Aviso: certifique-se de que a opção:
 
     Use the -XstartOnFirstThread argument when launching with SWT, não está selecionado.
 
-![Eclipse5](https://openjfx.io/openjfx-docs/images/ide/eclipse/ide/eclipse06.png)
+![Eclipse5](https://openjfx.io/openjfx-docs/images/ide/eclipse/ide/eclipse07.png)
 
 Clique em aplicar e feche a caixa de diálogo.
 
@@ -301,13 +302,7 @@ Para criar uma imagem de tempo de execução, execute os seguintes comandos:
 |set PATH_TO_FX_MODS="path\to\javafx-jmods-11"|export PATH_TO_FX_MODS=path/to/javafx-jmods-11
 |jlink --module-path "%PATH_TO_FX_MODS%;bin\hellofx" --add-modules=hellofx --output jre|$JAVA_HOME/bin/jlink --module-path $PATH_TO_FX_MODS:bin/hellofx --add-modules=hellofx --output jre
 |jre\bin\java -m hellofx/org.openjfx.MainApp|jre/bin/java -m hellofx/org.openjfx.MainApp
-<<<<<<< HEAD
 
-<<<<<<< HEAD
-### MySQL
-=======
-=======
->>>>>>> 	modified:   README.md
 ### SceneBuilder Gluon
 SceneBuider Gluon versão 11 utlizada esta disponível em [Gluon](https://gluonhq.com/products/scene-builder/thanks/?dl=/download/scene-builder-9-windows-x64/).
 
