@@ -66,8 +66,7 @@ public class Main extends Application {
         return instancia;
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         getInstancia();
         launch(args);
 

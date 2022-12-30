@@ -16,7 +16,7 @@ public class EstadoDao extends ModelDao {
     public int inserirEstado(Estado estado) throws Exception {
         try {
             prepararSQL(
-                    "INSERT INTO estado VALUES(DEFAULT, ?, ?, ?)"
+                    "INSERT INTO Estado_tb VALUES(DEFAULT, ?, ?, ?)"
             );
             getPs().setString(1,estado.getNome());
             getPs().setString(2,estado.getUf());
@@ -36,7 +36,7 @@ public class EstadoDao extends ModelDao {
     public void alterarEstado(Estado estado) throws Exception {
         try {
             prepararSQL(
-                    "UPDATE estado SET nome = ?, uf = ?, Pais_id = ? WHERE id = ?"
+                    "UPDATE Estado_tb SET nome = ?, uf = ?, Pais_id = ? WHERE id = ?"
             );
             getPs().setString(1, estado.getNome());
             getPs().setString(2, estado.getUf());
@@ -55,7 +55,7 @@ public class EstadoDao extends ModelDao {
     public void deletarEstado(int id) throws Exception {
         try {
             prepararSQL(
-                    "DELETE FROM usuario WHERE id = ?"
+                    "DELETE FROM Estado_tb WHERE id = ?"
             );
             getPs().setInt(1, id);
             executarSQL();
@@ -69,7 +69,7 @@ public class EstadoDao extends ModelDao {
     public Estado pesquisarUm(int id) throws Exception {
         try {
             prepararSQL(
-                    "SELECT * FROM estado WHERE id = ?"
+                    "SELECT * FROM Estado_tb WHERE id = ?"
             );
             getPs().setInt(1, id);
             executarQuerySQL();
@@ -98,7 +98,7 @@ public class EstadoDao extends ModelDao {
     public List<Estado> pesquisarTodos() throws Exception {
         try {
             prepararSQL(
-                    "SELECT * FROM estado"
+                    "SELECT * FROM Estado_tb"
             );
             executarQuerySQL();
             List<Estado> listaEstados = new ArrayList<>();
@@ -127,21 +127,21 @@ public class EstadoDao extends ModelDao {
     }
 
     public Estado pesquisarPorNome(String nome) throws Exception {
-        return pesquisarString("SELECT * FROM estado WHERE nome = ?", nome);
+        return pesquisarString("SELECT * FROM Estado_tb WHERE nome = ?", nome);
     }
 
     public Estado pesquisarPorUF(String uf) throws Exception {
-        return pesquisarString("SELECT * FROM estado WHERE uf = ?", uf);
+        return pesquisarString("SELECT * FROM Estado_tb WHERE uf = ?", uf);
     }
 
     public Estado pesquisarPorNaturalidade(String naturalidade) throws Exception {
-       return pesquisarString("SELECT * FROM estado WHERE naturalidade = ?", naturalidade);
+       return pesquisarString("SELECT * FROM Estado_tb WHERE naturalidade = ?", naturalidade);
     }
 
     public int contarQuantidadeEstado() throws Exception {
         try {
             prepararSQL(
-                    "SELECT COUNT(*) FROM estado"
+                    "SELECT COUNT(*) FROM Estado_tb"
             );
             executarQuerySQL();
             return (getRs().next()) ? getRs().getInt(1) : 0;
@@ -156,7 +156,7 @@ public class EstadoDao extends ModelDao {
     public boolean existeNomeEstado (String nome) throws Exception{
         try{
             prepararSQL(
-                "SELECT * FROM estado WHERE nome = ?"
+                "SELECT * FROM Estado_tb WHERE nome = ?"
             );
             getPs().setString(1,nome);
             executarQuerySQL();

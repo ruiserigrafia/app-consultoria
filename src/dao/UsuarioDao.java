@@ -16,7 +16,7 @@ public class UsuarioDao extends ModelDao {
 
         try {
             prepararSQL(
-                    "INSERT INTO Usuario(login,senha) value(?,?)"
+                    "INSERT INTO Usuario_tb(login,senha) value(?,?)"
             );
             getPs().setString(1, usuario.getLogin());
             getPs().setString(2, usuario.getSenha());
@@ -34,7 +34,7 @@ public class UsuarioDao extends ModelDao {
     public void alterarUsuario(Usuario usuario) throws Exception {
         try {
             prepararSQL(
-                "UPDATE usuario SET login = ?, senha = ? where id = ?"
+                "UPDATE Usuario_tb SET login = ?, senha = ? where id = ?"
             );
             getPs().setString(1, usuario.getLogin());
             getPs().setString(2,usuario.getSenha());
@@ -51,7 +51,7 @@ public class UsuarioDao extends ModelDao {
     public void deletarUsuario(int id) throws Exception {
         try {
             prepararSQL(
-                    "DELETE FROM usuario WHERE id=?"
+                    "DELETE FROM Usuario_tb WHERE id=?"
             );
             executarSQL();
         } catch (SQLException sqle) {
@@ -66,7 +66,7 @@ public class UsuarioDao extends ModelDao {
 
         try {
             prepararSQL(
-                "Select * from Usuario WHERE id=?"
+                "Select * from Usuario_tb WHERE id=?"
             );
             getPs().setInt(1, id);
             executarQuerySQL();
@@ -92,7 +92,7 @@ public class UsuarioDao extends ModelDao {
         try {
 
             prepararSQL(
-                    "SELECT * FROM usuario"
+                    "SELECT * FROM Usuario_tb"
             );
 
             executarQuerySQL();
@@ -123,7 +123,7 @@ public class UsuarioDao extends ModelDao {
     public boolean validarId(int id) throws Exception {
 
         try {
-            prepararSQL("select * from Usuario where id=?");
+            prepararSQL("select * from Usuario_tb where id=?");
             getPs().setInt(1, id);
             executarQuerySQL();
 
@@ -145,7 +145,7 @@ public class UsuarioDao extends ModelDao {
     public boolean validarLogin(String login) throws Exception {
 
         try {
-            prepararSQL("select * from Usuario where login=?");
+            prepararSQL("select * from Usuario_tb where login=?");
             getPs().setString(1, login);
             executarQuerySQL();
 
@@ -167,7 +167,7 @@ public class UsuarioDao extends ModelDao {
     public boolean validarSenha(String senha) throws Exception {
 
         try {
-            prepararSQL("select * from Usuario where login=?");
+            prepararSQL("select * from Usuario_tb where login=?");
             getPs().setString(1, senha);
             executarQuerySQL();
 

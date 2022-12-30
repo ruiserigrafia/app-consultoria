@@ -15,6 +15,7 @@ public class Pais {
     private StringProperty nome = new SimpleStringProperty();
     private StringProperty isp = new SimpleStringProperty();
     private IntegerProperty ddi = new SimpleIntegerProperty();
+    private StringProperty nacionalidade = new SimpleStringProperty();
     private List<Pais> paises = new ArrayList<>();
     private PaisDao paisDao;
 
@@ -22,11 +23,12 @@ public class Pais {
         paisDao = new PaisDao();
     }
 
-    public Pais(int id, String nome, String isp, int ddi) {
+    public Pais(int id, String nome, String isp, int ddi, String nacionalidade) {
         setId(id);
         setNome(nome);
         setISP(isp);
         setDDI(ddi);
+        setNacionalidade(nacionalidade);
     }
 
     public int getId() {
@@ -91,7 +93,23 @@ public class Pais {
     public void setPropriedadeDDI(IntegerProperty ddi) {
         this.ddi = ddi;
     }
+    
+    public String getNacionalidade() {
+    	return nacionalidade.get();
+    }
+    
+    public void setNacionalidade(String nacionalidade) {
+    	this.nacionalidade.set(nacionalidade);
+    }
 
+    public StringProperty getPrpriedadeNacionalidade() {
+    	return nacionalidade;
+    }
+    
+    public void setPripriedadeNacionalidade(StringProperty nacionalidade) {
+    	this.nacionalidade = nacionalidade;
+    }
+    
     public List<Pais> getPaises() {
         return paises;
     }
@@ -99,6 +117,7 @@ public class Pais {
     public void setPaises(List<Pais> paises) {
         this.paises = paises;
     }
+        
 
     public List<Pais> pesquisarPaises() throws Exception{
         return paisDao.pesquisarTodos();
@@ -144,9 +163,14 @@ public class Pais {
         }
         return nomesPaises;
     }
-
+    
+    
     public int obterTotalPaises() throws Exception {
         return paisDao.contarPaises();
     }
+
+	
+
+	
 
 }

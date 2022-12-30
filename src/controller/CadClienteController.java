@@ -146,11 +146,10 @@ public class CadClienteController implements Initializable {
     private Cidade cidade;
     private Etnia etnia;
     private Naturalidade naturalidade;
-    private Nacionalidade nacionalidade;
     private Religiao religiao;
     private Servidor servidor;
 
-    private Service service;
+    private Service<?> service;
 
 
     @Override
@@ -163,7 +162,6 @@ public class CadClienteController implements Initializable {
             cidade = new Cidade();
             etnia = new Etnia();
             naturalidade = new Naturalidade();
-            nacionalidade = new Nacionalidade();
             religiao = new Religiao();
             servidor = new Servidor();
             textStatus.setVisible(false);
@@ -194,29 +192,30 @@ public class CadClienteController implements Initializable {
     }
 
     private void carregarDadosBD() {
-        service = new Service() {
+        service = new Service<Object>() {
             @Override
-            protected Task createTask() {
-                return new Task() {
+            protected Task<Object> createTask() {
+                return new Task<Object>() {
                     @Override
                     protected Object call() throws Exception {
                         anchorPane.setDisable(true);
                         textStatus.setVisible(true);
                         progressBar.setVisible(true);
 
-                        updateMessage("Consultando e carregando do banco de dados...");
+                        updateMessage("Consultando e carregando dados do banco de dados...");
                         Thread.sleep(1000);
-
+                        
                         updateProgress(0,0);
                         int total = pais.obterTotalPaises();
                         updateMessage("Pesquisando registros de países...");
                         Thread.sleep(1000);
+                        
                         for (Pais p : pais.pesquisarPaises()) {
                             pais.getPaises().add(p);
                             updateProgress(p.getId(), total);
                             updateMessage("Carregando registros: " + p.getId() + " de " + total);
                         }
-
+                        /*
                         updateProgress(0,0);
                         total = estado.obterTotalEstados();
                         updateMessage("Pesquisando registros de estados...");
@@ -226,7 +225,7 @@ public class CadClienteController implements Initializable {
                             updateProgress(e.getId(), total);
                             updateMessage("Carregando registros: " + e.getId() + " de " + total);
                         }
-
+                        
                         updateProgress(0,0);
                         total = cidade.obterTotalCidades();
                         updateMessage("Pesquisando registros de cidades...");
@@ -236,7 +235,7 @@ public class CadClienteController implements Initializable {
                             updateProgress(c.getId(), total);
                             updateMessage("Carregando registros: " + c.getId() + " de " + total);
                         }
-
+                        
                         updateProgress(0,0);
                         total = nacionalidade.obterTotalNacionalidades();
                         updateMessage("Pesquisando registros de nacionalidades...");
@@ -247,7 +246,7 @@ public class CadClienteController implements Initializable {
                             updateProgress(nc.getId(), total);
                             updateMessage("Carregando registros: " + nc.getId() + " de " + total);
                         }
-
+                        
                         updateProgress(0,0);
                         total = naturalidade.obterTotalNaturalidades();
                         updateMessage("Pesquisando registros de naturalidades...");
@@ -287,10 +286,10 @@ public class CadClienteController implements Initializable {
                             updateProgress(srv.getId(), total);
                             updateMessage("Carregando registros: " + srv.getId() + " de " + total);
                         }
-
+						*/
                         updateMessage("DADOS CARREGADOS COM SUCESSO!");
                         Thread.sleep(1000);
-
+						
                         return null;
                     }
                 };
@@ -486,10 +485,11 @@ public class CadClienteController implements Initializable {
         });
 
         comboNacionalidade.setOnAction(actionEvent -> {
-            for(Nacionalidade nc: nacionalidade.getNacionalidades()) {
-                if(nc.getNacionalidade() == comboNacionalidade.getSelectionModel().getSelectedItem()) {
-                    nacionalidade.setId(nc.getId());
+            for(Pais nc: pais.getPaises()) {
+            	if(nc.getNacionalidade() == comboNacionalidade.getSelectionModel().getSelectedItem()) {
+                    pais.setId(nc.getId());
                 }
+            	            	
             }
         });
 
@@ -559,14 +559,17 @@ public class CadClienteController implements Initializable {
 
     private void listarNacionalidades() {
         try {
-            popularComboBox(nacionalidade.listaNomesNacionalidades(), "Brasileira", comboNacionalidade);
+        	if(pais.getId() > 0) {
+        		popularComboBox(pais.listaNomesNacionalidades(), "Brasileira", comboNacionalidade);
+        	}
+            
         } catch (Exception ex) {
             NotificadorAlertas.mostrarMsgErro(ex, "Erro ao tentar mostrar lista de nacionalidades");
         }    }
 
     private void listarNaturalidades() {
         try {
-            if(nacionalidade.getId() > 0) {
+            if(pais.getId() > 0) {
                 naturalidade.setNacionalidade(nacionalidade);
                 popularComboBox(naturalidade.listaPorNacionalidade(), "Paraense", comboNaturalidade);
             }
@@ -637,10 +640,10 @@ public class CadClienteController implements Initializable {
     }
 
     private void executarPopularComboBox(List<String> elementos, ComboBox<String> comboBox) {
-        service = new Service() {
+        service = new Service<Object>() {
             @Override
-            protected Task createTask() {
-                return new Task() {
+            protected Task<Object> createTask() {
+                return new Task<Object>() {
                     @Override
                     protected Object call() throws Exception {
                         textStatus.setVisible(true);

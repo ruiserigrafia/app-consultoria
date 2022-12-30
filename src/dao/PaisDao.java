@@ -7,19 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PaisDao extends ModelDao {
-
+	
     public PaisDao() throws Exception {
-
+    	this.setTabela("Pais_tb");
     }
 
     public void inserirPais(Pais pais) throws Exception {
         try {
             prepararSQL(
-                "INSERT INTO pais(nome, isp, ddd) VALUES (?, ?, ?)"
+                "INSERT INTO" + this.getTabela() + "(nome, isp, ddi, nacionalidade) VALUES (?, ?, ?, ?)"
             );
             getPs().setString(1, pais.getNome());
             getPs().setString(2, pais.getISP());
-            getPs().setInt(3,pais.getDDI());
+            getPs().setInt(3, pais.getDDI());
+            getPs().setString(4, pais.getNacionalidade());
             executarSQL();
         } catch (SQLException sqle) {
             throw new RuntimeException(sqle);
@@ -33,7 +34,7 @@ public class PaisDao extends ModelDao {
 
         try{
             prepararSQL(
-                "UPDATE pais SET nome = ?, isp = ?, ddd = ? WHERE id = ?"
+                "UPDATE" + this.getTabela() + " SET nome = ?, isp = ?, ddd = ? WHERE id = ?"
             );
             getPs().setString(1, pais.getNome());
             getPs().setString(2, pais.getISP());
@@ -48,12 +49,21 @@ public class PaisDao extends ModelDao {
         }
 
     }
+    
+    public void alterarNacionalidade(Pais pais) throws Exception {
+    	try {
+			prepararSQL("UPDATE " + this.getTabela() + "SET nacionalidade = ? WHERE id = ?" );
+			getPs().setString(1, pais.getNacionalidade());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
 
     public void deletarDados(int id) throws Exception {
 
         try {
             prepararSQL(
-                    "DELETE FROM pais WHERE id = ?"
+                    "DELETE FROM" + this.getTabela() + " WHERE id = ?"
             );
             getPs().setInt(1 , id);
             executarSQL();
@@ -71,19 +81,24 @@ public class PaisDao extends ModelDao {
         try {
 
             prepararSQL(
-                    "SELECT * FROM pais WHERE id = ?"
+                    "SELECT * FROM " + this.getTabela() +" WHERE id = ?"
             );
             getPs().setInt(1, id);
+            
             executarQuerySQL();
+            
             while ( getRs().next()) {
+            	
+            	
                 return new Pais(
                         getRs().getInt(1),
                         getRs().getString(2),
                         getRs().getString(3),
-                        getRs().getInt(4)
+                        getRs().getInt(4),
+                        getRs().getString(5)    
                 );
             };
-
+			
         } catch (SQLException sqle) {
             throw new Exception(sqle);
         }
@@ -95,7 +110,7 @@ public class PaisDao extends ModelDao {
         try {
 
             prepararSQL(
-                    "SELECT * FROM pais WHERE nome = ?"
+                    "SELECT * FROM " + this.getTabela() +" WHERE nome = ?"
             );
             getPs().setString(1, nome);
             executarQuerySQL();
@@ -104,7 +119,8 @@ public class PaisDao extends ModelDao {
                         getRs().getInt(1),
                         getRs().getString(2),
                         getRs().getString(3),
-                        getRs().getInt(4)
+                        getRs().getInt(4),
+                       getRs().getString(5)                     
                 );
             };
 
@@ -122,7 +138,7 @@ public class PaisDao extends ModelDao {
         try {
 
             prepararSQL(
-                    "SELECT * FROM pais WHERE isp = ?"
+                    "SELECT * FROM " + this.getTabela() + " WHERE isp = ?"
             );
             getPs().setString(1, isp);
             executarQuerySQL();
@@ -131,8 +147,9 @@ public class PaisDao extends ModelDao {
                         getRs().getInt(1),
                         getRs().getString(2),
                         getRs().getString(3),
-                        getRs().getInt(4)
-                );
+                        getRs().getInt(4),
+                        getRs().getString(5)
+                 );
             };
 
         } catch (SQLException sqle) {
@@ -149,7 +166,7 @@ public class PaisDao extends ModelDao {
         try {
 
             prepararSQL(
-                    "SELECT * FROM pais WHERE ddi = ?"
+                    "SELECT * FROM " + this.getTabela() + " WHERE ddi = ?"
             );
             getPs().setInt(1, ddi);
             executarQuerySQL();
@@ -158,7 +175,8 @@ public class PaisDao extends ModelDao {
                         getRs().getInt(1),
                         getRs().getString(2),
                         getRs().getString(3),
-                        getRs().getInt(4)
+                        getRs().getInt(4),
+                        getRs().getString(5)   
                 );
             };
 
@@ -177,7 +195,7 @@ public class PaisDao extends ModelDao {
         try {
 
             prepararSQL(
-                "SELECT * FROM pais WHERE nacionalidade = ?"
+                "SELECT * FROM " + this.getTabela() + " WHERE nacionalidade = ?"
             );
             getPs().setString(1, nacionalidade);
             executarQuerySQL();
@@ -186,7 +204,8 @@ public class PaisDao extends ModelDao {
                         getRs().getInt(1),
                         getRs().getString(2),
                         getRs().getString(3),
-                        getRs().getInt(4)
+                        getRs().getInt(4),
+                        getRs().getString(5)
                 );
             };
 
@@ -202,7 +221,7 @@ public class PaisDao extends ModelDao {
     public List<Pais> pesquisarTodos() throws Exception {
         try {
             prepararSQL(
-                    "SELECT * FROM pais"
+                    "SELECT * FROM " + this.getTabela()
             );
             executarQuerySQL();
             List<Pais> listaPaises = new ArrayList<>();
@@ -213,7 +232,8 @@ public class PaisDao extends ModelDao {
                                 getRs().getInt("id"),
                                 getRs().getString("nome"),
                                 getRs().getString("isp"),
-                                getRs().getInt("ddi")
+                                getRs().getInt("ddi"),
+                                getRs().getString("nacionalidade")
                         )
                 );
             }
@@ -232,7 +252,7 @@ public class PaisDao extends ModelDao {
         try {
 
             prepararSQL(
-                    "SELECT COUNT(*) FROM pais"
+                    "SELECT COUNT(*) FROM " + this.getTabela()
             );
             executarQuerySQL();
             return (getRs().next()) ? getRs().getInt(1) : 0;
@@ -250,7 +270,7 @@ public class PaisDao extends ModelDao {
 
         try {
             prepararSQL(
-                    "SELECT nome FROM pais where nome LIKE '^?'"
+                    "SELECT nome FROM " + this.getTabela() + " WHERE nome LIKE '^?'"
             );
             getPs().setString(1,iniciais);
             executarQuerySQL();

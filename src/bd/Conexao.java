@@ -14,8 +14,8 @@ public class Conexao {
                 DriverManager.
                     getConnection(
                         "jdbc:mysql://localhost/consultoria?useTimezone=true&serverTimezone=UTC",
-                        "root",
-                        "root"
+                        "developer",
+                        "admin"
                     );
 
         } catch (SQLException sqle) {

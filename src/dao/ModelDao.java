@@ -11,17 +11,20 @@ public abstract class ModelDao {
     private Connection conecta;
     private PreparedStatement ps;
     private ResultSet rs;
-
+    private String tabela;
+    
     public ModelDao() throws Exception {
         conecta = Conexao.getConnection();
         ps = null;
         rs = null;
+        tabela = null;
     }
 
     protected void prepararSQL(String sql) throws Exception {
         ps = conecta.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
     }
 
+    
     protected boolean executarSQL() throws Exception {
         return ps.execute();
     }
@@ -51,4 +54,12 @@ public abstract class ModelDao {
     protected void setRs(ResultSet rs) {
         this.rs = rs;
     }
+    
+    protected String getTabela() {
+		return tabela;
+	}
+    
+    protected void setTabela(String tabela) {
+		this.tabela = tabela;
+	}
 }

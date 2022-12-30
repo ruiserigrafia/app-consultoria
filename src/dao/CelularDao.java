@@ -18,7 +18,7 @@ public class CelularDao extends TelefoneDao{
         try {
             Celular celular = (Celular) telefone;
             prepararSQL(
-                    "INSERT Celular VALUES(default, ?, ?)"
+                    "INSERT Celular_tb VALUES(default, ?, ?)"
             );
             getPs().setInt(1, celular.getNumero());
             getPs().setBoolean(2, celular.isWhatsapp());
@@ -41,7 +41,7 @@ public class CelularDao extends TelefoneDao{
         try {
             Celular celular = (Celular) telefone;
             prepararSQL(
-                    "UPDATE celular SET numero = ?, zap = ? where id = ?"
+                    "UPDATE Celular_tb SET numero = ?, zap = ? where id = ?"
             );
             getPs().setInt(1, celular.getNumero());
             getPs().setBoolean(2, celular.isWhatsapp());
@@ -62,7 +62,7 @@ public class CelularDao extends TelefoneDao{
 
         try {
             prepararSQL(
-                    "DELETE FROM celular WHERE id ="
+                    "DELETE FROM Celular_tb WHERE id = ?"
             );
             getPs().setInt(1, id);
             if( ! executarSQL() ){
@@ -80,7 +80,7 @@ public class CelularDao extends TelefoneDao{
         try {
 
             prepararSQL(
-                    "SELECT * FROM celular WHERE id = ?"
+                    "SELECT * FROM Celular_tb WHERE id = ?"
             );
             getPs().setInt(1, id);
             executarQuerySQL();
@@ -107,7 +107,7 @@ public class CelularDao extends TelefoneDao{
 
         try {
             prepararSQL(
-                    "SELECT * FROM celular WHERE numero = ?"
+                    "SELECT * FROM Celular_tb WHERE numero = ?"
             );
             getPs().setInt(1, numero);
             executarQuerySQL();
@@ -133,7 +133,7 @@ public class CelularDao extends TelefoneDao{
         List<Celular> listaCelular = new ArrayList<>();
         try {
             prepararSQL(
-                    "SELECT * FROM celular"
+                    "SELECT * FROM Celular"
             );
             executarQuerySQL();
             while (getRs().next()) {

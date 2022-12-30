@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CidadeDao extends ModelDao {
-
+		
+	protected final String table = "Cidade_tb"; 
+	
     public CidadeDao() throws Exception{
 
     }
@@ -17,7 +19,7 @@ public class CidadeDao extends ModelDao {
     public int inserirCidade(Cidade cidade) throws Exception {
         try {
             prepararSQL(
-                "INSERT INTO cidade VALUES (DEFAULT, ?, ?)"
+                "INSERT INTO " + table  + "ALUES (DEFAULT, ?, ?)"
             );
             getPs().setString(1, cidade.getNome());
             getPs().setInt(2, cidade.getEstado().getId());
@@ -36,7 +38,7 @@ public class CidadeDao extends ModelDao {
     public void alterarCidade(Cidade cidade) throws Exception {
         try {
             prepararSQL(
-                    "UPDATE cidade SET nome = ?, Estado_id = ? WHERE id = ?"
+                    "UPDATE " + table +  "SET nome = ?, Estado_id = ? WHERE id = ?"
             );
             getPs().setInt(1,cidade.getId());
             if(! executarSQL() ){
@@ -52,7 +54,7 @@ public class CidadeDao extends ModelDao {
     public void deletarCidade(int id) throws Exception {
         try {
             prepararSQL(
-                    "DELETE FROM cidade WHERE id = ?"
+                    "DELETE FROM " + table + " WHERE id = ?"
             );
             getPs().setInt(1, id);
             executarSQL();
@@ -66,7 +68,7 @@ public class CidadeDao extends ModelDao {
     public Cidade pesquisarPorId(int id) throws Exception {
         try {
             prepararSQL(
-                    "SELECT * FROM cidade WHERE id = ?"
+                    "SELECT * FROM " + table + " WHERE id = ?"
             );
             getPs().setInt(1, id);
             executarQuerySQL();
@@ -88,7 +90,7 @@ public class CidadeDao extends ModelDao {
     public Cidade pesquisarPorNome(String nome) throws Exception {
         try {
             prepararSQL(
-                    "SELECT * FROM cidade WHERE nome = ?"
+                    "SELECT * FROM " + table + " WHERE nome = ?"
             );
             getPs().setString(1, nome);
             executarQuerySQL();
@@ -110,7 +112,7 @@ public class CidadeDao extends ModelDao {
     public List<Cidade> pesquisarTodos() throws Exception{
         try {
             prepararSQL(
-                "SELECT * from cidade"
+                "SELECT * from " + table
             );
             executarQuerySQL();
             List<Cidade> cidades = new ArrayList<>();
@@ -140,7 +142,7 @@ public class CidadeDao extends ModelDao {
     public int contarQuantidadeCidade() throws Exception {
         try {
             prepararSQL(
-                    "SELECT COUNT(*) FROM cidade"
+                    "SELECT COUNT(*) FROM " + table
             );
             executarQuerySQL();
             while (getRs().next()) {

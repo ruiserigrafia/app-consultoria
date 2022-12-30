@@ -64,7 +64,7 @@ Como alternativa, você pode definir uma variável global que possa ser usada em
 ![JAVAFX DOC5](https://openjfx.io/openjfx-docs/images/ide/intellij/ide/idea07.png)
 Então você pode se referir a essa variável global ao definir as opções da VM como:
 
-    --module-path ${PATH_TO_FX} --add-modules=javafx.controls,javafx.fxml
+    --module-path ${PATH_TO_FX} --add-modules javafx.controls,javafx.fxml
 
 **Projeto Modular**
 
